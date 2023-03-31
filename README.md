@@ -10,7 +10,7 @@ Deze repository bevat zowel de opgave als de startcode voor het project van Prog
 1. Download de opgave repository door onderstaande commando uit te voeren.
    
    ```bash
-   git clone {{clone_url}}
+   git clone https://github.ugent.be/pgm-project-2022-2023/pgm-project-2022-2023-groep-24.git
    ```
 
 1. Navigeer naar map van jullie repository en open het project in VSCode.
@@ -18,8 +18,8 @@ Deze repository bevat zowel de opgave als de startcode voor het project van Prog
    **Belangrijk: open het project steeds door middel van het `Project.code-workspace` bestand!**
 
    ```bash
-   $ cd {{repo.name}}
-   {{repo.name}}$ code Project.code-workspace
+   $ cd pgm-project-2022-2023-groep-24
+   pgm-project-2022-2023-groep-24$ code Project.code-workspace
    
    ```
 
@@ -37,4 +37,3 @@ Het bestand `project_voorbeeldoplossing.exe` bevat een voorbeeldoplossing. Om de
 
 
 Veel succes!
-
