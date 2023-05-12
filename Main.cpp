@@ -61,6 +61,8 @@ int main(int argc, char **argv) {
     Config &config_ = Config::Get();
     if(config_.Map()["game.fps"]==60) {std::cout << "game fps correctly set and used." << std::endl;}
 
+    Config::Get().Print(config_.Map());
+
     return 0;
     #endif
 

@@ -21,11 +21,13 @@ class Config {
     }
 
     void Print(const std::map<std::string, double> &config) {
-        // TODO
+        std::cout << "Config map contains:" << endl;
+        for(std::map<std::string, double>::const_iterator it=config.begin(); it!=config.end(); ++it) {
+            std::cout << it->first << "=" << it->second << endl;
+        }
     }
 
     bool Set(const std::string &config_file) {
-        // TODO
         std::fstream fs (config_file, std::fstream::in);
         if (!fs.is_open()) {
         return false;
