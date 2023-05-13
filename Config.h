@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <sstream>
+using namespace std;
 
 class Config {
   public:
@@ -20,12 +21,36 @@ class Config {
     }
 
     void Print(const std::map<std::string, double> &config) {
-        // TODO
+        std::cout << "Config map contains:" << endl;
+        for(std::map<std::string, double>::const_iterator it=config.begin(); it!=config.end(); ++it) {
+            std::cout << it->first << "=" << it->second << endl;
+        }
     }
 
     bool Set(const std::string &config_file) {
-        // TODO
+        std::fstream fs (config_file, std::fstream::in);
+        if (!fs.is_open()) {
         return false;
+        }
+
+        config_.clear();
+
+        std::string tag;
+        while (!fs.eof()) {
+            std::string line;
+            fs >> line;
+            size_t pos1 = line.find('[');
+            size_t pos2 = line.find(']');
+            size_t pos3 = line.find('=');
+            if (pos1!=std::string::npos) {tag = line.substr(pos1+1,pos2-pos1-1);}
+            else if (pos3!=std::string::npos){
+               std::string key = line.substr(0,pos3);
+               key = tag + "." + key;
+               double value = std::stod(line.substr(pos3+1));
+               config_[key]=value;
+            }
+        }
+        return true;
     }
 
     std::map<std::string, double> Map() const {
