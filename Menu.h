@@ -14,20 +14,20 @@ enum menu_actions {
   OPEN_PREV,
   OPEN_REPLAY,
   OPEN_LEVELMENU,
-  OPEN_REPLAY,
-  BACK
+  OPEN_REPLAYMENU,
+  BACK,
+  QUIT
 
-}
+};
 
 class Menu_item {
   public:
-    Menu_item(std::string text, enum menu_actions): text(text), menu_actions(menu_actions);
+    Menu_item(std::string text, enum menu_actions): text(text), menu_actions(menu_actions) {};
   private:
     std::string text;
-    enum menu_actions;
+    int menu_actions;
     bool action(enum menu_actions);
-
-}
+};
 
 class Menu {
   public:
@@ -59,16 +59,21 @@ class Menu {
 std::vector<Menu_item> start_menu, level_menu, score_menu;
 
 /*Construct start_menu*/
+void create_start_menu(std::vector<Menu_item> start_menu) {
 start_menu.push_back(Menu_item("start", OPEN_LEVELMENU));
 start_menu.push_back(Menu_item("replay", OPEN_REPLAYMENU));
 start_menu.push_back(Menu_item("quit", QUIT));
+};
 
 /*Construct level_menu*/
+void create_level_menu(std::vector<Menu_item> level_menu) {
 level_menu.push_back(Menu_item("quit", BACK));
+};
 
 /*Construct score_menu*/
-score_menu.push_back(Menu_item("quit", BACK))
-
+void create_level_menu(std::vector<Menu_item> score_menu) {
+score_menu.push_back(Menu_item("quit", BACK));
+};
 
 
 #endif
