@@ -9,7 +9,7 @@ enum menu {
   SCORE_MENU
 };
 
-enum menu_actions {
+typedef enum menu_actions {
   START_GAME,
   OPEN_PREV,
   OPEN_REPLAY,
@@ -17,17 +17,15 @@ enum menu_actions {
   OPEN_REPLAYMENU,
   BACK,
   QUIT
+} menu_actions;
 
-};
+/* enum user_actions {
+  ENTER,
+  UP,
+  DOWN,
+  ESC
+}; */
 
-class Menu_item {
-  public:
-    Menu_item(std::string text, enum menu_actions): text(text), menu_actions(menu_actions) {};
-    bool action(enum menu_actions=menu_actions);
-  private:
-    std::string text;
-    int menu_actions;
-};
 
 class Menu {
   public:
@@ -38,14 +36,10 @@ class Menu {
 
     void StartGame();
 
+    void OpenReplay();
+
   private:
     Allkit *ak_ = NULL;
-
-    int selected = 0;
-
-    std::vector<Menu_item> menu_items = select_menu(START_MENU);
-
-    std::vector<Menu_item> select_menu(enum menu);
 
     void display_menu(int index);
 
@@ -53,8 +47,25 @@ class Menu {
 
   protected:
     bool exit_ = false;
+
+    int selected = 0;
+
+    std::vector<Menu_item> menu_items = select_menu(START_MENU);
+
+    std::vector<Menu_item> select_menu(enum menu);
 };
 
+
+class Menu_item : public Menu {
+  public:
+    Menu_item(std::string text, menu_actions menu_action): text(text), menu_action(menu_action) {};
+    bool action(menu_actions);
+    menu_actions menu_action;
+    void Run() = delete;
+
+  private:
+    std::string text;
+};
 /* Create Menu's */
 std::vector<Menu_item> start_menu, level_menu, score_menu;
 
