@@ -23,10 +23,10 @@ enum menu_actions {
 class Menu_item {
   public:
     Menu_item(std::string text, enum menu_actions): text(text), menu_actions(menu_actions) {};
+    bool action(enum menu_actions=menu_actions);
   private:
     std::string text;
     int menu_actions;
-    bool action(enum menu_actions);
 };
 
 class Menu {
