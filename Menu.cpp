@@ -2,6 +2,7 @@
 #include "Context.h"
 #include "Game.h"
 
+menu_actions Menu_item::get_action() {return menu_action;}
 
 void Menu::Run() {
     exit_ = false;
@@ -18,12 +19,12 @@ void Menu::Run() {
         }
 
         if (ak_->IsArrowKeyDownPushed()) {
-            if (selected++!=(menu_items.size()-1)) {display_menu(selected);}
-            else {selected = (menu_items.size()-1);}
+            if (selected++!=((int)menu_items.size()-1)) {display_menu(selected);}
+            else {selected = ((int)menu_items.size()-1);}
         }
 
         if (ak_->IsEnterKeyPushed()||ak_->IsSpaceBarPushed()) {
-            menu_items[selected].action(menu_items[selected].menu_action);
+            action(menu_items[selected].get_action());
             display_menu(0);
         }
 
@@ -33,31 +34,23 @@ void Menu::Run() {
     }
 }
 
-void Menu::StartGame() {
-    Context context;
+void Menu::create_menu(menu menu) {
 
-    Game game(context);
-
-    game.Run();
+    switch(menu) {
+        case START_MENU:
+            menu_items.push_back(Menu_item("start", OPEN_LEVELMENU));
+            menu_items.push_back(Menu_item("replay", OPEN_REPLAYMENU));
+            menu_items.push_back(Menu_item("quit", QUIT));
+            break;
+        case LEVEL_MENU:
+            menu_items.push_back(Menu_item("quit", BACK));
+            break;
+        case SCORE_MENU:
+            menu_items.push_back(Menu_item("quit", BACK));
+    }
 }
 
-void Menu::OpenReplay() {
-    // TODO
-}
-
-void display_menu(int index) {
-    // todo
-}
-
-void Menu::display_menu(enum menu, int index=0) {
-    // TODO
-}
-
-std::vector<Menu_item> Menu::select_menu(enum menu) {
-    //TODO
-}
-
-bool Menu_item::action (menu_actions menu_action) {
+void Menu::action (menu_actions menu_action) {
     switch (menu_action) {
         case START_GAME:
             StartGame();
@@ -78,4 +71,28 @@ bool Menu_item::action (menu_actions menu_action) {
         case OPEN_REPLAY:
             OpenReplay();
     }
+}
+
+void Menu::StartGame() {
+    Context context;
+
+    Game game(context);
+
+    game.Run();
+}
+
+void Menu::OpenReplay() {
+    // TODO
+}
+
+void Menu::display_menu(int index) {
+    // todo
+}
+
+void Menu::display_menu(enum menu, int index=0) {
+    // TODO
+}
+
+std::vector<Menu_item> Menu::select_menu(enum menu) {
+    //TODO
 }
