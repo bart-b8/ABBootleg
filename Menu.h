@@ -30,6 +30,7 @@ class Menu_item {
   public:
     Menu_item(std::string text, menu_actions menu_action): text(text), menu_action(menu_action) {};
     menu_actions get_action();
+    std::string get_text();
 
   private:
     std::string text;
@@ -61,9 +62,9 @@ class Menu {
 
     int selected = 0;
 
-    std::vector<Menu_item> select_menu(menu);
+    void select_menu(menu);
 
-    std::vector<Menu_item> menu_items = select_menu(START_MENU);
+    std::vector<Menu_item> menu_items;
 
   protected:
     bool exit_ = false;
