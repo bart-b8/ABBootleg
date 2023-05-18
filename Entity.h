@@ -8,7 +8,7 @@
 
 class Entity {
   private:
-    std::vector<Component*> Comps;
+    std::vector<Component*> vec_comps;
     std::vector<Component::Tag> vec_tags;
 
   public:
