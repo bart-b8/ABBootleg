@@ -102,13 +102,12 @@ void Menu::display_menu(int index) {
                         Config::Get().Map()["game.screen_height"]); 
     Point pos1(Config::Get().Map()["game.screen_width"]/2,Config::Get().Map()["game.screen_height"]-180);
     Point pos2(Config::Get().Map()["game.screen_width"]/2,-20);
-    double space = (pos1-pos2).Length();
+    double space = pos1*pos2;
     Color color_selected(255,0,0);
     Color color_notsel(0,0,0);
     size_t size = menu_items.size();
 
     for (int i=0; i<(int)size; i++) {
-        //todo
         Point pos;
         Color color;
         if (i!=selected) {
