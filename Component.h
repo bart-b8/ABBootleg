@@ -7,6 +7,14 @@ class Component {
       Position,
       Speed,
       Render,
+      Target_box,
+      Target_Circle,
+      Target_Stone,
+      Missile_Current,
+      Missile_Yellow,
+      Missile_Purple,
+      Missile_Green,
+      Missile_Black,
     };
 
     virtual Tag GetTag() = 0;
