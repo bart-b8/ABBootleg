@@ -39,14 +39,17 @@ void Menu::create_menu(menu menu) {
 
     switch(menu) {
         case START_MENU:
+            menu_items.clear();
             menu_items.push_back(Menu_item("start", OPEN_LEVELMENU));
             menu_items.push_back(Menu_item("replay", OPEN_REPLAYMENU));
             menu_items.push_back(Menu_item("quit", QUIT));
             break;
         case LEVEL_MENU:
+            menu_items.clear();
             menu_items.push_back(Menu_item("quit", BACK));
             break;
         case SCORE_MENU:
+            menu_items.clear();
             menu_items.push_back(Menu_item("quit", BACK));
     }
 }
@@ -57,16 +60,16 @@ void Menu::action (menu_actions menu_action) {
             StartGame();
             break;
         case OPEN_PREV:
-            display_menu(START_MENU);
+            display_menu(START_MENU,0);
             break;
         case OPEN_LEVELMENU:
-            display_menu(LEVEL_MENU);
+            display_menu(LEVEL_MENU,0);
             break;
         case OPEN_REPLAYMENU:
-            display_menu(SCORE_MENU);
+            display_menu(SCORE_MENU,0);
             break;
         case BACK:
-            display_menu(START_MENU);
+            display_menu(START_MENU,0);
             break;
         case QUIT:
             exit_ = true;
@@ -90,14 +93,15 @@ void Menu::OpenReplay() {
 
 void Menu::display_menu(int index) {
    ak_->ClearScreen();
+   selected = index;
    ak_->DrawScaledBitmap(SPRT_MENU_BACKGROUND, (float)0, (float)0,
                         Config::Get().Map()["game.background_width"],
                         Config::Get().Map()["game.background_height"],
                         (float)0, (float)0,
                         Config::Get().Map()["game.screen_width"],
                         Config::Get().Map()["game.screen_height"]); 
-    Point pos1(Config::Get().Map()["game.screen_width"]/2,Config::Get().Map()["game.screen_height"]-100);
-    Point pos2(Config::Get().Map()["game.screen_width"]/2,100);
+    Point pos1(Config::Get().Map()["game.screen_width"]/2,Config::Get().Map()["game.screen_height"]-180);
+    Point pos2(Config::Get().Map()["game.screen_width"]/2,-20);
     double space = (pos1-pos2).Length();
     Color color_selected(255,0,0);
     Color color_notsel(0,0,0);
@@ -105,15 +109,21 @@ void Menu::display_menu(int index) {
 
     for (int i=0; i<(int)size; i++) {
         //todo
+        Point pos;
         Color color;
         if (i!=selected) {
             color=color_notsel;
         } else {
             color=color_selected;
         }
-        Point pos(Config::Get().Map()["game.screen_width"]/2,100+(space/(int)size*i));
+        if (size!=1) {
+            pos.x_=pos1.x_;
+            pos.y_=pos1.y_-(i*space/(size-1));
+        } else {
+            pos = pos2;
+        }
         std::string text = menu_items[i].get_text();
-        ak_->DrawString(text,pos,color,ak_->ALIGN_CENTER, true);
+        ak_->DrawString(text,pos,color,ak_->ALIGN_CENTER, false);
     }
     ak_->DrawOnScreen(true);
 }
