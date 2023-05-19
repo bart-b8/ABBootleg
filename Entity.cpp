@@ -1,23 +1,36 @@
 #include "Entity.h"
 
-/*
+
+
 void Entity::Add(Component* component) {
-    // TODO
+    vec_comps.push_back(component);
 }
 
 void Entity::Remove(Component* component) {
-    // TODO
+    auto re=std::find(vec_comps.begin(),vec_comps.end(),component);
+    if (re!=vec_comps.end()) {
+        vec_comps.erase(re);
+    }
 }
 
 Component* Entity::GetComponent(Component::Tag tag) {
-    // TODO
+    for (auto component:vec_comps) { 
+        if (component->GetTag()==tag){
+            return component;
+        }
+    }
+    return nullptr; 
 }
 
 std::vector<Component::Tag>& Entity::GetTags() {
-    // TODO
+    vec_tags.clear();
+    for (auto component:vec_comps) {
+        vec_tags.push_back(component->GetTag());
+    }
+    return vec_tags; // kan gwn vector geven en niet referentie
 }
 
 std::vector<Component*>& Entity::GetComponents() {
-    // TODO
+    return vec_comps; //kan gwn vector geven en niet referentie
 }
-*/
+

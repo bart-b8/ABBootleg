@@ -1,5 +1,6 @@
 #ifndef POINT_H
 #define POINT_H
+#include <cmath>
 
 #include <math.h>
 
@@ -9,6 +10,7 @@ class Point {
 
     Point(){};
     Point(double x, double y) : x_(x), y_(y){};
+
 
     Point operator-(const Point &o) {
         return Point(x_-o.x_,y_-o.y_);
@@ -31,6 +33,7 @@ class Point {
         if (1!=0.0) {
             x_ = x_/l;
             y_ = y_/l; 
+
         }
     }
 };

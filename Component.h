@@ -4,7 +4,17 @@
 class Component {
   public:
     enum Tag {
-        // TODO
+      Target_box,
+      Target_Circle,
+      Target_Stone,
+      Missile_Current,
+      Missile_Yellow,
+      Missile_Purple,
+      Missile_Green,
+      Missile_Black,
+      Target,
+      Polygon,
+      Sprite,
     };
 
     virtual Tag GetTag() = 0;

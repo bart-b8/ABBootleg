@@ -2,10 +2,15 @@
 #define ENTITYSTREAM_H
 
 #include <set>
-
+#include <map>
 #include "Entity.h"
+#include "Component.h"
+#include "algorithm"
 
 class EntityStream {
+  private:
+    std::map <Component::Tag, std::set<Entity*>> map_entitys;
+
   public:
     std::set<Entity *> WithTag(Component::Tag tag);
 

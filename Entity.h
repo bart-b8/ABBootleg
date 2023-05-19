@@ -2,10 +2,15 @@
 #define ENTITY_H
 
 #include <vector>
+#include <algorithm>
 
 #include "Component.h"
 
 class Entity {
+  private:
+    std::vector<Component*> vec_comps;
+    std::vector<Component::Tag> vec_tags;
+
   public:
     void Add(Component *component);
 

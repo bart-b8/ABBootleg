@@ -1,39 +1,50 @@
 #include "Engine.h"
 
-/*
+
 void Engine::AddEntity(Entity* entity) {
-    // TODO
+    vec_entitys.push_back(entity);
 }
 
 void Engine::UpdateEntity(Entity* entity, std::vector<Component::Tag>& tags, bool remove) {
-    // TODO
+    entityStrm->EntityUpdated(entity, tags, remove);
 }
 
 std::vector<Entity*>::iterator Engine::RemoveEntity(Entity* entity) {
-    // TODO
+    auto re=std::find(vec_entitys.begin(),vec_entitys.end(),entity);
+    if (re!=vec_entitys.end()){
+        re=vec_entitys.erase(re); // check
+    }
+    return re;
 }
 
 void Engine::AddSystem(System* system) {
-    // TODO
+    vec_systems.push_back(system);
+    system->SetEngine(this);
 }
 
 std::vector<System*>::iterator Engine::RemoveSystem(System* system) {
-    // TODO
+    auto re=std::find(vec_systems.begin(),vec_systems.end(),system);
+    if (re!=vec_systems.end()){
+        re=vec_systems.erase(re); //check
+    }
+    return re;
 }
 
 std::vector<Entity*>& Engine::GetEntities() {
-    // TODO
+    return vec_entitys;
 }
 
 void Engine::Update() {
-     // TODO
+     for (auto system:vec_systems){
+        system->Update();
+     }
 }
 
 EntityStream& Engine::GetEntityStream() {
-    // TODO
+    return *entityStrm; //check
 }
 
 Context& Engine::GetContext() {
-    // TODO
+    return *ctx; //check
 }
-*/
+

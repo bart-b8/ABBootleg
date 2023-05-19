@@ -2,12 +2,18 @@
 #define ENGINE_H
 
 #include <vector>
-
+#include <algorithm>
 #include "Context.h"
 #include "EntityStream.h"
 #include "System.h"
 
 class Engine {
+  private:
+  std::vector<Entity*> vec_entitys;
+  std::vector<System*> vec_systems;
+  EntityStream* entityStrm;
+  Context* ctx;
+
   public:
     Engine(Context &context) {}
 
