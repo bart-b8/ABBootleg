@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
      * Below are tests defined used during development. Use directives to create test AND stop each test with return 0;
     */
     
-    #define TEST_CONFIG_READ
+    //#define TEST_CONFIG_READ
 
     #ifdef TEST_CONFIG_READ
     if(!Config::Get().Set("./assets/config/config.ini")) {

@@ -8,6 +8,7 @@ std::string Menu_item::get_text() {return text;}
 void Menu::Run() {
     exit_ = false;
 
+    select_menu(START_MENU);
     display_menu(selected);
 
     // Menu loop
@@ -65,8 +66,10 @@ void Menu::action (menu_actions menu_action) {
             display_menu(SCORE_MENU);
             break;
         case BACK:
-        case QUIT:
             display_menu(START_MENU);
+            break;
+        case QUIT:
+            exit_ = true;
             break;
         case OPEN_REPLAY:
             OpenReplay();
@@ -100,7 +103,7 @@ void Menu::display_menu(int index) {
     Color color_notsel(0,0,0);
     size_t size = menu_items.size();
 
-    for (std::vector<Menu_item>::iterator it = menu_items.begin(), int i=0; it != menu_items.end(); ++it, i++) {
+    for (int i=0; i<(int)size; i++) {
         //todo
         Color color;
         if (i!=selected) {
@@ -108,9 +111,11 @@ void Menu::display_menu(int index) {
         } else {
             color=color_selected;
         }
-        Point pos(Config::Get().Map()["game.screen_width"]/2,100+(space/(int)size*i))
-        ak_->DrawString(it.get_text(),pos,color,ak_->ALIGN_CENTER, true);
+        Point pos(Config::Get().Map()["game.screen_width"]/2,100+(space/(int)size*i));
+        std::string text = menu_items[i].get_text();
+        ak_->DrawString(text,pos,color,ak_->ALIGN_CENTER, true);
     }
+    ak_->DrawOnScreen(true);
 }
 
 void Menu::display_menu(menu menu, int index=0) {
