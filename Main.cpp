@@ -48,27 +48,6 @@ void InitWsl() {
 int main(int argc, char **argv) {
     InitWsl();
 
-    /****
-     * Below are tests defined used during development. Use directives to create test AND stop each test with return 0;
-    */
-    
-    #define TEST_CONFIG_READ
-
-    #ifdef TEST_CONFIG_READ
-    if(!Config::Get().Set("./assets/config/config.ini")) {
-        std::cout << "Config file error!" << std::endl;
-    }
-    Config &config_ = Config::Get();
-    if(config_.Map()["game.fps"]==60) {std::cout << "game fps correctly set and used." << std::endl;}
-
-    Config::Get().Print(config_.Map());
-
-    return 0;
-    #endif
-
-    /******
-     * End of defined tests. Without any test name defined. The standard main() statements are run.
-    */
 
     if (!Config::Get().Set("./assets/config/config.ini")) {
         std::cout << "Config file error!" << std::endl;
