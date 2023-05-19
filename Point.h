@@ -2,6 +2,8 @@
 #define POINT_H
 #include <cmath>
 
+#include <math.h>
+
 class Point {
   public:
     double x_, y_;
@@ -9,32 +11,29 @@ class Point {
     Point(){};
     Point(double x, double y) : x_(x), y_(y){};
 
-    double operator*(const Point &o) {
-        double x_2 = o.x_ - x_;
-        double y_2 = o.y_ - y_;
-        return sqrt(x_2 * x_2 + y_2 * y_2);
-    }
-        
 
     Point operator-(const Point &o) {
-        double x_2 = o.x_ - x_;
-        double y_2 = o.y_ - y_;
-        return Point(x_2,y_2);
+        return Point(x_-o.x_,y_-o.y_);
     }
 
     double operator>>(const Point &o) {
-        return (x_ * o.x_ + y_ * o.y_) / sqrt(o.x_*o.x_ +o.y_*o.y_ );        
+        return x_*o.x_ + y_*o.y_ ;
     }
 
     double Length() {
-        return sqrt(x_*x_ +y_*y_ );
+        return sqrt(pow(x_,2) + pow(y_,2));
+    }
+
+    double operator*(const Point &o) {
+        return (*this-o).Length();
     }
 
     void Normalize() {
-        double l =Length();
-        if (l != 0.0){
-            x_= x_/l;
-            y_=y_/l;
+        double l = Length();
+        if (1!=0.0) {
+            x_ = x_/l;
+            y_ = y_/l; 
+
         }
     }
 };
