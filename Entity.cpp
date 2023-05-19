@@ -14,13 +14,12 @@ void Entity::Remove(Component* component) {
 }
 
 Component* Entity::GetComponent(Component::Tag tag) {
-    for (auto component:vec_comps) { // for loop die alleen werkt met begin en end dingen
+    for (auto component:vec_comps) { 
         if (component->GetTag()==tag){
             return component;
         }
-
     }
-    return nullptr; //component niet gevonden in vector met opgegeven tag
+    return nullptr; 
 }
 
 std::vector<Component::Tag>& Entity::GetTags() {
@@ -28,10 +27,10 @@ std::vector<Component::Tag>& Entity::GetTags() {
     for (auto component:vec_comps) {
         vec_tags.push_back(component->GetTag());
     }
-    return vec_tags;
+    return vec_tags; // kan gwn vector geven en niet referentie
 }
 
 std::vector<Component*>& Entity::GetComponents() {
-    return vec_comps;
+    return vec_comps; //kan gwn vector geven en niet referentie
 }
 

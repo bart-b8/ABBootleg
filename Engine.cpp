@@ -12,7 +12,7 @@ void Engine::UpdateEntity(Entity* entity, std::vector<Component::Tag>& tags, boo
 std::vector<Entity*>::iterator Engine::RemoveEntity(Entity* entity) {
     auto re=std::find(vec_entitys.begin(),vec_entitys.end(),entity);
     if (re!=vec_entitys.end()){
-        vec_entitys.erase(re);
+        re=vec_entitys.erase(re); // check
     }
     return re;
 }
@@ -25,7 +25,7 @@ void Engine::AddSystem(System* system) {
 std::vector<System*>::iterator Engine::RemoveSystem(System* system) {
     auto re=std::find(vec_systems.begin(),vec_systems.end(),system);
     if (re!=vec_systems.end()){
-        vec_systems.erase(re);
+        re=vec_systems.erase(re); //check
     }
     return re;
 }
@@ -41,10 +41,10 @@ void Engine::Update() {
 }
 
 EntityStream& Engine::GetEntityStream() {
-    return *entityStrm;
+    return *entityStrm; //check
 }
 
 Context& Engine::GetContext() {
-    return *ctx;
+    return *ctx; //check
 }
 

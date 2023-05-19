@@ -5,7 +5,7 @@ std::set<Entity*> EntityStream::WithTag(Component::Tag tag) {
     if (map_entitys.count(tag)>0){
         return map_entitys[tag];
     }
-    return std::set<Entity*>();
+    return std::set<Entity*>(); //check
 }
 
 std::set<Entity*> EntityStream::WithTags(std::set<Component::Tag>& tags) {
@@ -38,7 +38,7 @@ void EntityStream::EntityUpdated(Entity* entity, std::vector<Component::Tag>& ta
         if (remove) {
             map_entitys[tag].erase(entity);
         } else {
-            map_entitys[tag].insert(entity);
+            map_entitys[tag].insert(entity);//check
         }
     }
 }
