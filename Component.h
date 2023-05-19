@@ -4,9 +4,6 @@
 class Component {
   public:
     enum Tag {
-      Position,
-      Speed,
-      Render,
       Target_box,
       Target_Circle,
       Target_Stone,
@@ -15,6 +12,9 @@ class Component {
       Missile_Purple,
       Missile_Green,
       Missile_Black,
+      Target,
+      Polygon,
+      Sprite,
     };
 
     virtual Tag GetTag() = 0;
