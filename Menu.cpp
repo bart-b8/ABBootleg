@@ -1,9 +1,16 @@
 #include "Menu.h"
 #include "Context.h"
 #include "Game.h"
+#include <filesystem>
+#include <algorithm>
+// namespace fs=std::filesystem;
 
 menu_actions Menu_item::get_action() {return menu_action;}
 std::string Menu_item::get_text() {return text;}
+
+bool Menu_item::operator< (const Menu_item& rhs_) const {
+    return (text < rhs_.text);
+}
 
 void Menu::Run() {
     exit_ = false;
@@ -44,10 +51,17 @@ void Menu::create_menu(menu menu) {
             menu_items.push_back(Menu_item("replay", OPEN_REPLAYMENU));
             menu_items.push_back(Menu_item("quit", QUIT));
             break;
-        case LEVEL_MENU:
+        case LEVEL_MENU: {
             menu_items.clear();
+            std::string levels_dir = "./assets/levels";
+            for (const std::filesystem::directory_entry & level_dir : std::filesystem::directory_iterator(levels_dir)) {
+                std::string filename = level_dir.path().stem();
+                menu_items.push_back(Menu_item(filename, START_GAME));
+            };
+            std::sort(menu_items.begin(),menu_items.end());
             menu_items.push_back(Menu_item("quit", BACK));
             break;
+            }
         case SCORE_MENU:
             menu_items.clear();
             menu_items.push_back(Menu_item("quit", BACK));

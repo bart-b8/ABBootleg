@@ -32,6 +32,8 @@ class Menu_item {
     menu_actions get_action();
     std::string get_text();
 
+    bool operator< (const Menu_item& ) const;
+
   private:
     std::string text;
     menu_actions menu_action;
