@@ -64,6 +64,14 @@ void Menu::create_menu(menu menu) {
             }
         case SCORE_MENU:
             menu_items.clear();
+            std::string highscores_dir = "./assets/highscores";
+            for (const std::filesystem::directory_entry & highscore_dir : std::filesystem::directory_iterator(highscores_dir)) {
+                std::string filename = highscore_dir.path().stem();
+                if (filename!="checksum") {
+                    menu_items.push_back(Menu_item(filename, OPEN_REPLAY));
+                }
+            }
+            std::sort(menu_items.begin(),menu_items.end());
             menu_items.push_back(Menu_item("quit", BACK));
     }
 }
