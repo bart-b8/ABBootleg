@@ -4,7 +4,7 @@
 class Component {
   public:
     enum Tag {
-      Target_box,
+      Target_Box,
       Target_Circle,
       Target_Stone,
       Missile_Current,
