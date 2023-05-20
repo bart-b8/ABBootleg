@@ -16,12 +16,14 @@ class Game {
         // TODO
     };
 
-    bool Run();
+    void Run();
+  
 
   private:
     Allkit *ak_ = NULL;
     Context &context_;
     Engine engine_;
+    bool Start = false;
 };
 
 #endif
