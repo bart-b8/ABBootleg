@@ -2,6 +2,7 @@
 #define MENU_H
 
 #include "Allkit.h"
+#include <filesystem>
 
 typedef enum menu {
   START_MENU,
@@ -34,14 +35,24 @@ class Menu_item {
 
     bool operator< (const Menu_item& ) const;
 
-  private:
+  protected:
     std::string text;
     menu_actions menu_action;
+};
+
+class Level_Menu_item : public Menu_item {
+  public: 
+    Level_Menu_item(std::string text, menu_actions menu_action, std::filesystem::path path_level) : Menu_item(text, menu_action), path_level(path_level) {};
+    std::filesystem::path get_path(); 
+  private: 
+    std::filesystem::path path_level;
+
 };
 
 class Menu {
   public:
     Menu() : ak_(&Allkit::Get()){};
+    ~Menu();
 
     // Start the menu loop
     void Run();
@@ -66,7 +77,9 @@ class Menu {
 
     void select_menu(menu);
 
-    std::vector<Menu_item> menu_items;
+    void destruct_menu_items();
+
+    std::vector<Menu_item*> menu_items;
 
   protected:
     bool exit_ = false;
