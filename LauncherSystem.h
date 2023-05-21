@@ -24,6 +24,7 @@ class LauncherSystem : public System {
 
   private:
     std::vector<int> vec_queue;
+    std::vector<double> vec_coordinates,
 };
 
 #endif
