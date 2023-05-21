@@ -13,7 +13,7 @@ bool Menu_item::operator< (const Menu_item& rhs_) const {
     return (text < rhs_.text);
 }
 
-bool Menu_item::grt(const Menu_item* lhs, const Menu_item* rhs) {
+bool grt(Menu_item* lhs, Menu_item* rhs) {
     std::string text_left = lhs->get_text();
     std::string text_right = rhs->get_text();
 
@@ -77,7 +77,7 @@ void Menu::create_menu(menu menu) {
                 ptr_menu_item = new Level_Menu_item(filename, START_GAME, level_dir.path());
                 menu_items.push_back(ptr_menu_item);
             };
-            std::sort(menu_items.begin(),menu_items.end());
+            std::sort(menu_items.begin(),menu_items.end(),grt);
             ptr_menu_item = new Menu_item("quit", BACK);
             menu_items.push_back(ptr_menu_item);
             break;
@@ -93,7 +93,7 @@ void Menu::create_menu(menu menu) {
                     menu_items.push_back(ptr_menu_item);
                 }
             }
-            std::sort(menu_items.begin(),menu_items.end());
+            std::sort(menu_items.begin(),menu_items.end(),grt);
             ptr_menu_item = new Menu_item("quit", BACK);
             menu_items.push_back(ptr_menu_item);
     }

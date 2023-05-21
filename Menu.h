@@ -35,7 +35,7 @@ class Menu_item {
     std::string get_text();
 
     bool operator< (const Menu_item& ) const;
-    bool grt(const Menu_item*, const Menu_item*) const;
+    friend bool grt(Menu_item*, Menu_item*) ;
 
   protected:
     std::string text;
