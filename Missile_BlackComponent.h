@@ -12,4 +12,8 @@ public:
     Tag GetTag() override {
         return Tag::Missile_Black;
     }
+
+    virtual int GetType() override{
+        return Type::Black;
+    }
 };

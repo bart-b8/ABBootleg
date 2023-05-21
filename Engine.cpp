@@ -41,10 +41,10 @@ void Engine::Update() {
 }
 
 EntityStream& Engine::GetEntityStream() {
-    return *entityStrm; //check
+    return *entityStrm;
 }
 
 Context& Engine::GetContext() {
-    return *ctx; //check
+    return *ctx;
 }
 
