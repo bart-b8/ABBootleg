@@ -129,6 +129,9 @@ void Menu::StartGame() {
 
     // Set level path in context: 
     // create class based on Menu_item for level menu items that include the path to level file. 
+    Level_Menu_item *ptr_selected = dynamic_cast<Level_Menu_item*>(menu_items[selected]);
+    context.pth_level=ptr_selected->get_path();
+
 
     Game game(context);
 

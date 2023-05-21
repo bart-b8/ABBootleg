@@ -5,7 +5,7 @@
 
 class Context {
     public: 
-        const std::filesystem::path* pth_level;
+        std::filesystem::path pth_level;
 };
 
 #endif
