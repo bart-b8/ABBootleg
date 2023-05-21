@@ -10,7 +10,15 @@ class MissileSystem : public System {
   public:
     void Update();
 
-  private:
+    void LaunchMissile();
+
+    void Elastic();
+
+    void MissileAbility();
+
+    void MissileRecord();
+
+    private:
 
 };
 
