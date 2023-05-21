@@ -17,6 +17,13 @@ class Component {
       Sprite,
     };
 
+    enum Type {
+      Yellow,
+      Purple,
+      Green,
+      Black,
+    };
+
     virtual Tag GetTag() = 0;
 
     // Geeft de kans terug dat een bepaalde missile component voorkomt
