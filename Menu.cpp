@@ -13,6 +13,13 @@ bool Menu_item::operator< (const Menu_item& rhs_) const {
     return (text < rhs_.text);
 }
 
+bool Menu_item::grt(const Menu_item* lhs, const Menu_item* rhs) {
+    std::string text_left = lhs->get_text();
+    std::string text_right = rhs->get_text();
+
+    return (text_left < text_right);
+}
+
 Menu::~Menu() {
     destruct_menu_items();
 }

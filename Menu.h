@@ -30,10 +30,12 @@ typedef enum menu_actions {
 class Menu_item {
   public:
     Menu_item(std::string text, menu_actions menu_action): text(text), menu_action(menu_action) {};
+    virtual ~Menu_item() {};
     menu_actions get_action();
     std::string get_text();
 
     bool operator< (const Menu_item& ) const;
+    bool grt(const Menu_item*, const Menu_item*) const;
 
   protected:
     std::string text;
@@ -43,6 +45,7 @@ class Menu_item {
 class Level_Menu_item : public Menu_item {
   public: 
     Level_Menu_item(std::string text, menu_actions menu_action, std::filesystem::path path_level) : Menu_item(text, menu_action), path_level(path_level) {};
+    virtual ~Level_Menu_item() {};
     std::filesystem::path get_path(); 
   private: 
     std::filesystem::path path_level;
