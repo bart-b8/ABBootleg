@@ -16,7 +16,7 @@ class Game {
         // TODO
     };
 
-    void Run();
+    bool Run();
   
 
   private:

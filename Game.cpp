@@ -30,4 +30,6 @@ bool Game::Run() {
         }
 
     }
+    return true;
+}
 
