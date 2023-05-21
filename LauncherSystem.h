@@ -10,9 +10,9 @@ class LauncherSystem : public System {
   public:
     void Update();
 
-    void CreateQueue();
+    void CreateQueue(std::vector<int> vec_queue);
 
-    void AddToQueue();
+    void AddToQueue(std::vector<int> vec_queue, int AddMissile);
 
     double WeightedAverage();
 
