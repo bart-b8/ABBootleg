@@ -1,5 +1,6 @@
 #include "LauncherSystem.h"
 
+/*
 void LauncherSystem::Update(){
 
 }
@@ -24,5 +25,6 @@ bool LauncherSystem::MouseOnMissile(){
 }
 
 void LauncherSystem::MouseRecord(){
-    
+
 }
+*/
