@@ -103,6 +103,7 @@ void Menu::action (menu_actions menu_action) {
     switch (menu_action) {
         case START_GAME:
             StartGame();
+            display_menu(START_MENU,0);
             break;
         case OPEN_PREV:
             display_menu(START_MENU,0);
