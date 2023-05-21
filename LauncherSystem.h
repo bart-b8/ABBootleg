@@ -10,8 +10,20 @@ class LauncherSystem : public System {
   public:
     void Update();
 
-  private:
+    void CreateQueue();
 
+    void AddToQueue();
+
+    double WeightedAverage();
+
+    void MouseLocation();
+
+    bool MouseOnMissile();
+
+    void MouseRecord();
+
+  private:
+    std::vector<int> vec_queue;
 };
 
 #endif
