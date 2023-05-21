@@ -22,6 +22,7 @@ class Game {
     Allkit *ak_ = NULL;
     Context &context_;
     Engine engine_;
+    void render_placeholder() const;
 };
 
 #endif

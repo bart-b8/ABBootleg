@@ -7,9 +7,21 @@
 
 menu_actions Menu_item::get_action() {return menu_action;}
 std::string Menu_item::get_text() {return text;}
+std::filesystem::path Level_Menu_item::get_path() {return path_level;}
 
 bool Menu_item::operator< (const Menu_item& rhs_) const {
     return (text < rhs_.text);
+}
+
+bool grt(Menu_item* lhs, Menu_item* rhs) {
+    std::string text_left = lhs->get_text();
+    std::string text_right = rhs->get_text();
+
+    return (text_left < text_right);
+}
+
+Menu::~Menu() {
+    destruct_menu_items();
 }
 
 void Menu::Run() {
@@ -33,7 +45,7 @@ void Menu::Run() {
         }
 
         if (ak_->IsEnterKeyPushed()||ak_->IsSpaceBarPushed()) {
-            action(menu_items[selected].get_action());
+            action(menu_items[selected]->get_action());
         }
 
         if (ak_->IsWindowClosed()) {
@@ -45,34 +57,45 @@ void Menu::Run() {
 void Menu::create_menu(menu menu) {
 
     switch(menu) {
-        case START_MENU:
-            menu_items.clear();
-            menu_items.push_back(Menu_item("start", OPEN_LEVELMENU));
-            menu_items.push_back(Menu_item("replay", OPEN_REPLAYMENU));
-            menu_items.push_back(Menu_item("quit", QUIT));
+        case START_MENU: {
+            destruct_menu_items();
+            Menu_item* ptr_menu_item = new Menu_item("start", OPEN_LEVELMENU);
+            menu_items.push_back(ptr_menu_item);
+            ptr_menu_item = new Menu_item("replay", OPEN_REPLAYMENU);
+            menu_items.push_back(ptr_menu_item);
+            ptr_menu_item = new Menu_item("quit", QUIT);
+            menu_items.push_back(ptr_menu_item);
+
             break;
+        }
         case LEVEL_MENU: {
-            menu_items.clear();
+            destruct_menu_items();
             std::string levels_dir = "./assets/levels";
+            Menu_item* ptr_menu_item;
             for (const std::filesystem::directory_entry & level_dir : std::filesystem::directory_iterator(levels_dir)) {
                 std::string filename = level_dir.path().stem();
-                menu_items.push_back(Menu_item(filename, START_GAME));
+                ptr_menu_item = new Level_Menu_item(filename, START_GAME, level_dir.path());
+                menu_items.push_back(ptr_menu_item);
             };
-            std::sort(menu_items.begin(),menu_items.end());
-            menu_items.push_back(Menu_item("quit", BACK));
+            std::sort(menu_items.begin(),menu_items.end(),grt);
+            ptr_menu_item = new Menu_item("quit", BACK);
+            menu_items.push_back(ptr_menu_item);
             break;
             }
         case SCORE_MENU:
-            menu_items.clear();
+            destruct_menu_items();
             std::string highscores_dir = "./assets/highscores";
+            Menu_item* ptr_menu_item;
             for (const std::filesystem::directory_entry & highscore_dir : std::filesystem::directory_iterator(highscores_dir)) {
                 std::string filename = highscore_dir.path().stem();
                 if (filename!="checksum") {
-                    menu_items.push_back(Menu_item(filename, OPEN_REPLAY));
+                    ptr_menu_item = new Level_Menu_item(filename, OPEN_REPLAY, highscore_dir.path());
+                    menu_items.push_back(ptr_menu_item);
                 }
             }
-            std::sort(menu_items.begin(),menu_items.end());
-            menu_items.push_back(Menu_item("quit", BACK));
+            std::sort(menu_items.begin(),menu_items.end(),grt);
+            ptr_menu_item = new Menu_item("quit", BACK);
+            menu_items.push_back(ptr_menu_item);
     }
 }
 
@@ -80,6 +103,7 @@ void Menu::action (menu_actions menu_action) {
     switch (menu_action) {
         case START_GAME:
             StartGame();
+            display_menu(START_MENU,0);
             break;
         case OPEN_PREV:
             display_menu(START_MENU,0);
@@ -103,6 +127,12 @@ void Menu::action (menu_actions menu_action) {
 
 void Menu::StartGame() {
     Context context;
+
+    // Set level path in context: 
+    // create class based on Menu_item for level menu items that include the path to level file. 
+    Level_Menu_item *ptr_selected = dynamic_cast<Level_Menu_item*>(menu_items[selected]);
+    context.pth_level=ptr_selected->get_path();
+
 
     Game game(context);
 
@@ -143,7 +173,7 @@ void Menu::display_menu(int index) {
         } else {
             pos = pos2;
         }
-        std::string text = menu_items[i].get_text();
+        std::string text = menu_items[i]->get_text();
         ak_->DrawString(text,pos,color,ak_->ALIGN_CENTER, false);
     }
     ak_->DrawOnScreen(true);
@@ -156,4 +186,11 @@ void Menu::display_menu(menu menu, int index=0) {
 
 void Menu::select_menu(menu menu) {
     create_menu(menu);
+}
+
+void Menu::destruct_menu_items() {
+    for (const auto ptr : menu_items) {
+        delete ptr;
+    }
+    menu_items.clear();
 }
