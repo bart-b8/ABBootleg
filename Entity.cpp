@@ -27,10 +27,10 @@ std::vector<Component::Tag>& Entity::GetTags() {
     for (auto component:vec_comps) {
         vec_tags.push_back(component->GetTag());
     }
-    return vec_tags; // kan gwn vector geven en niet referentie
+    return vec_tags;
 }
 
 std::vector<Component*>& Entity::GetComponents() {
-    return vec_comps; //kan gwn vector geven en niet referentie
+    return vec_comps;
 }
 
