@@ -16,7 +16,8 @@ class Game {
         // TODO
     };
 
-    bool Run();
+    void Run();
+  
 
   private:
     Allkit *ak_ = NULL;
