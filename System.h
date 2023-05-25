@@ -6,7 +6,7 @@ class Engine;
 class System {
     protected:
     
-    Engine* engine;
+    Engine* engine_;
 
     public:
 

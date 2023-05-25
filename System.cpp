@@ -4,5 +4,5 @@
 
 
 void System::SetEngine(Engine* engine) {
-    this->engine = engine;
+    engine_ = engine;
 }

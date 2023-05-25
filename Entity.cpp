@@ -4,17 +4,20 @@
 
 void Entity::Add(Component* component) {
     vec_comps.push_back(component);
+    vec_tags.push_back(component->GetTag());
 }
 
 void Entity::Remove(Component* component) {
-    auto re=std::find(vec_comps.begin(),vec_comps.end(),component);
+    std::vector<Component*>::iterator re=std::find(vec_comps.begin(),vec_comps.end(),component);
     if (re!=vec_comps.end()) {
         vec_comps.erase(re);
+        std::vector<Component::Tag>::iterator re2=std::find(vec_tags.begin(),vec_tags.end(),component->GetTag());
+        vec_tags.erase(re2);
     }
 }
 
 Component* Entity::GetComponent(Component::Tag tag) {
-    for (auto component:vec_comps) { 
+    for (Component* component:vec_comps) { 
         if (component->GetTag()==tag){
             return component;
         }
@@ -23,10 +26,6 @@ Component* Entity::GetComponent(Component::Tag tag) {
 }
 
 std::vector<Component::Tag>& Entity::GetTags() {
-    vec_tags.clear();
-    for (auto component:vec_comps) {
-        vec_tags.push_back(component->GetTag());
-    }
     return vec_tags;
 }
 
