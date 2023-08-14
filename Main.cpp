@@ -9,6 +9,8 @@
 #ifdef TEST
 #include "./Point.h"
 #include "./Context.h"
+#include "./Entity.h"
+#include "./Target_Component.h"
 #endif // TEST
 
 int test_Config_Set() {
@@ -120,6 +122,44 @@ int test_Context() {
   return count;
 }
 
+int test_Entity() {
+  int count = 0;
+  Entity tstEntity;
+
+  std::cout << "Entity net aangemaakt. " << endl;
+
+  std::cout << "Test if all functions work for 1 component" << endl;
+  Target_Component * trgtComp = new Target_Component;
+  tstEntity.Add(trgtComp);
+  std::vector<Component*> vec_comp = tstEntity.GetComponents();
+  if (vec_comp[0] == trgtComp) { std::cout << "We find the correct address" << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: in recovering ptr to component.";
+  }
+  std::vector<Component::Tag> vec_tags = tstEntity.GetTags();
+  if (vec_tags[0] == Component::Target) { std::cout << "Tags correctly found via GetTags()." << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: Tags not correctly found using gettags() " << endl;
+  }
+  Component* res = tstEntity.GetComponent(Component::Target);
+  if (res == trgtComp) { std::cout << "We get correct adress searching with tags. " << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: Component not found using Tags" << endl;
+  }
+
+  std::cout << "Test for 2 components" << endl;
+
+
+  delete trgtComp;
+  std::cout << "Total result for Entity tests: " << count << " Fails" << endl;
+  if (!count) { std::cout << "Entity Tests SUCCES" << endl;}
+  else { std::cout << "Entity Test FAILURE"<< endl; }
+  return count;
+}
+
 void InitWsl() {
     std::ifstream inFile;
     inFile.open("/proc/version");
@@ -170,6 +210,8 @@ int main(int argc, char **argv) {
       count += test_Point();
       std::cout << endl <<endl;
       count += test_Context();
+      std::cout << endl << endl;
+      count += test_Entity();
       std::cout << "Total FAILED: " << count << endl;
       if (!count) { std::cout << "TESTS SUCCES"; }
       else { std::cout << "TESTS FAILED"; }
