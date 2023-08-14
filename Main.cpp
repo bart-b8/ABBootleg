@@ -1,9 +1,40 @@
+#include "Config.h"
 #include "Menu.h"
 
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
 
+#define TEST
+
+void test_Config_Set() {
+  unsigned int count = 0;
+  std::cout << "Config before Setting config. Should be empty." << endl;
+  Config::Get().Print(Config::Get().Map());
+  std::cout << endl << endl;
+  std::cout << "Initially config map is empty: " << Config::Get().Map().empty() << endl;
+  if (!Config::Get().Map().empty()) {
+    std::cout << "First fault. Expected true got: " << Config::Get().Map().empty() << endl;
+    count++;
+  }
+  if (Config::Get().Set("./assets/config/config.ini")) {
+    std::cout << "Config file read without issues." << endl;
+  } else {
+      std::cout << "Config file error!" << std::endl;
+      count++;
+  }
+  std::cout << endl << "Testing Parameters: Map should be printed below:" << endl;
+  Config::Get().Print(Config::Get().Map());
+  std::cout << endl << endl;
+  if (Config::Get().Map()["game.fps"] == 60.0) {
+    std::cout << "game.fps was read correctly as: " << Config::Get().Map()["game.fps"] << endl;
+  } else {
+    count++;
+    std::cout << "game.fps was read incorrectly as: " << Config::Get().Map()["game.fps"] << endl;
+  }
+  std::cout << "Number of tests to fail: " << count << endl << endl;
+  if (!count) { std::cout << "PASSED config tests" << endl; }
+}
 
 void InitWsl() {
     std::ifstream inFile;
@@ -47,6 +78,11 @@ void InitWsl() {
 
 int main(int argc, char **argv) {
     InitWsl();
+
+    #ifdef TEST
+      test_Config_Set();
+      return 1;
+    #endif // TEST
 
 
     if (!Config::Get().Set("./assets/config/config.ini")) {
