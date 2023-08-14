@@ -8,6 +8,7 @@
 #define TEST
 #ifdef TEST
 #include "./Point.h"
+#include "./Context.h"
 #endif // TEST
 
 int test_Config_Set() {
@@ -102,6 +103,23 @@ int test_Point() {
   return count;
 }
 
+int test_Context() {
+  int count = 0;
+  Context _ct;
+  _ct.pth_level = "./assets/levels/level1.txt";
+  std::cout << "TEST: Context," << endl;
+  std::cout << "After constructing context and assigning pth level: " << endl;
+  std::cout << "The path to the level file: " << _ct.pth_level << endl;
+  if (_ct.pth_level.filename() != "level1.txt") {
+    count++;
+    std::cout << "FAIL: Path level has not been recoverd correctly.";
+  }
+  std::cout << "Total result for Context tests: " << count << " Fails" << endl;
+  if (!count) { std::cout << "Context Tests SUCCES" << endl;}
+  else { std::cout << "Context Test FAILURE"<< endl; }
+  return count;
+}
+
 void InitWsl() {
     std::ifstream inFile;
     inFile.open("/proc/version");
@@ -150,6 +168,11 @@ int main(int argc, char **argv) {
       count += test_Config_Set();
       std::cout << endl << endl;
       count += test_Point();
+      std::cout << endl <<endl;
+      count += test_Context();
+      std::cout << "Total FAILED: " << count << endl;
+      if (!count) { std::cout << "TESTS SUCCES"; }
+      else { std::cout << "TESTS FAILED"; }
       return count;
     #endif // TEST
 
