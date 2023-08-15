@@ -3,17 +3,7 @@
 
 
 class Missile_GreenComponent : public Component {
-public:
-    double width;
-    double height;
-    double x;
-    double y;
-
-    Tag GetTag() override {
-        return Tag::Missile_Green;
-    }
-
-    virtual int GetType() override{
-        return Type::Green;
-    }
+ public:
+    Tag GetTag() override { return Tag::Missile_Green; }
+    int GetType() override{ return Type::Green; }
 };

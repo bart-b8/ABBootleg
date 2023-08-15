@@ -3,17 +3,8 @@
 
 
 class Missile_BlackComponent : public Component {
-public:
-    double width;
-    double height;
-    double x;
-    double y;
+ public:
+  Tag GetTag() override { return Tag::Missile_Black; }
 
-    Tag GetTag() override {
-        return Tag::Missile_Black;
-    }
-
-    virtual int GetType() override{
-        return Type::Black;
-    }
+  int GetType() override{ return Type::Black; }
 };

@@ -1,24 +1,26 @@
+// Copyright (c) 2023 BD. All Rights Reserved.
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
-#include <vector>
 #include "Allkit.h"
 #include "Point.h"
 #include "System.h"
+#include <vector>
 
 class RenderSystem : public System {
-  public:
-    void DrawEntitys();
+public:
+  RenderSystem(Engine &engine) : System(engine) { ak_ = &Allkit::Get(); }
 
-    bool InScreenWindow();
+  void Update();
 
-    void DrawScores();
+  void DrawEntitys();
 
-  private:
+  bool InScreenWindow();
 
+  void DrawScores();
+
+private:
+  Allkit *ak_ = NULL;
 };
-
-
-
 
 #endif

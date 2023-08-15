@@ -4,8 +4,9 @@
 #include <filesystem>
 
 class Context {
- public: 
+ public:
   std::filesystem::path pth_level;
+  bool screenchange = true;
 };
 
 #endif

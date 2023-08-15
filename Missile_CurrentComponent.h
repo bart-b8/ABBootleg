@@ -1,13 +1,11 @@
 
 #include "Component.h"
+#include "./Point.h"
 
 
 class Missile_CurrentComponent : public Component {
-public:
-    double width;
-    double height;
-    double x;
-    double y;
+ public:
+  Point vel;
 
     Tag GetTag() override {
         return Tag::Missile_Current;

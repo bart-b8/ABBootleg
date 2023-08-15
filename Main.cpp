@@ -6,14 +6,13 @@
 #include <iostream>
 #include <stdlib.h>
 
-#define TEST
+// #define TEST
 #ifdef TEST
 #include "./Context.h"
 #include "./Entity.h"
 #include "./Engine.h"
 #include "./Point.h"
 #include "./Target_Component.h"
-#endif  // TEST
 
 int test_Config_Set() {
   int count = 0;
@@ -277,6 +276,7 @@ int test_Engine() {
   }
   return count;
 }
+#endif  // TEST
 
 void InitWsl() {
   std::ifstream inFile;

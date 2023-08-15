@@ -4,16 +4,13 @@
 class Engine;
 
 class System {
-    protected:
-    
-    Engine* engine_;
+ protected:
+  Engine &engine_;
 
-    public:
+ public:
+  System(Engine &engine): engine_(engine) {}
 
-    virtual void Update() = 0;
-
-    void SetEngine(Engine* engine);
-
+  virtual void Update() = 0;
 };
 
 #endif

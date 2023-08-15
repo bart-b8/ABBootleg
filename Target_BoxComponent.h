@@ -3,13 +3,6 @@
 
 
 class Target_BoxComponent : public Component {
-public:
-    double width;
-    double height;
-    double x;
-    double y;
-
-    Tag GetTag() override {
-        return Tag::Target_Box;
-    }
+ public:
+  Tag GetTag() override { return Tag::Target_Box; }
 };
