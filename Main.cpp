@@ -1,3 +1,4 @@
+#include "Component.h"
 #include "Config.h"
 #include "Menu.h"
 
@@ -9,12 +10,13 @@
 #ifdef TEST
 #include "./Context.h"
 #include "./Entity.h"
+#include "./Engine.h"
 #include "./Point.h"
 #include "./Target_Component.h"
-#endif // TEST
+#endif  // TEST
 
 int test_Config_Set() {
-  unsigned int count = 0;
+  int count = 0;
   std::cout << "Config before Setting config. Should be empty." << endl;
   Config::Get().Print(Config::Get().Map());
   std::cout << endl << endl;
@@ -56,7 +58,7 @@ void print_Point(Point p) {
             << "\ty: " << p.y_ << endl;
 }
 int test_Point() {
-  unsigned int count = 0;
+  int count = 0;
   std::cout << "Test 1: Create Point object:" << endl;
   Point p1 = Point(0, 0);
   std::cout << "The first Point: " << endl;
@@ -174,6 +176,7 @@ int test_Entity() {
   }
 
   std::cout << "Test for 2 components" << endl;
+  std::cout << "No tests implemented yet." << endl;
 
   delete trgtComp;
   std::cout << "Total result for Entity tests: " << count << " Fails" << endl;
@@ -181,6 +184,77 @@ int test_Entity() {
     std::cout << "Entity Tests SUCCES" << endl;
   } else {
     std::cout << "Entity Test FAILURE" << endl;
+  }
+  return count;
+}
+
+int test_EntityStream() {
+  int count = 0;
+  EntityStream strm;
+  Target_Component tgtcomp;
+  Entity enty;
+  enty.Add(&tgtcomp);
+  strm.EntityUpdated(&enty, enty.GetTags(), false);
+  std::set<Entity *> wthTagTarget = strm.WithTag(Component::Target);
+  std::set<Entity *> wthTagSprite = strm.WithTag(Component::Sprite);
+  if (wthTagTarget.count(&enty) == 1) { std::cout << "Entity with Target tag found well." << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: Entity with Target tag not found well." << endl; 
+  }
+  if (wthTagSprite.empty()) { std::cout << "No Entities with sprite components. As expected." << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: There where no enitites expected with sprite component." << endl;
+  }
+
+  strm.EntityUpdated(&enty, enty.GetTags(), true);
+  wthTagTarget = strm.WithTag(Component::Target);
+  if (wthTagTarget.empty()) { std::cout << "No Entities with target components. As expected." << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: There where no enitites expected with Target component." << endl;
+  }
+
+  std::cout << "Total result for EntityStream tests: " << count << " Fails" << endl;
+  if (!count) {
+    std::cout << "EntityStream Tests SUCCES" << endl;
+  } else {
+    std::cout << "EntityStream Test FAILURE" << endl;
+  }
+  return count;
+}
+
+int test_Engine() {
+  int count = 0;
+
+  Target_Component tgtcomp;
+  Entity entity1;
+  entity1.Add(&tgtcomp);
+  Context context = Context();
+  Engine engine = Engine(context);
+
+  std::cout << "TESTs for Engine" << endl;
+  std::cout << "Test 1: AddEntity" << endl;
+  // Should add entity to engine via pointer
+  // AND should update the entity stream.
+  engine.AddEntity(&entity1);
+  std::vector<Entity*> entities = engine.GetEntities();
+  if (entities[0] == &entity1) {
+    std::cout << "entitity1 found in Engine" << endl;
+  } else {
+    count++;
+    std::cout << "FAIL: Entity1 not found." << endl;
+  }
+  // EntityStream strm = engine.GetEntityStream();
+  // std::set<Entity*> withTagTarget = strm.WithTag(Component::Target);
+  // std::set<Entity*> withTagSprite = strm.WithTag(Component::Sprite);
+
+  std::cout << "Total result for Engine tests: " << count << " Fails" << endl;
+  if (!count) {
+    std::cout << "Engine Tests SUCCES" << endl;
+  } else {
+    std::cout << "Engine Test FAILURE" << endl;
   }
   return count;
 }
@@ -245,6 +319,12 @@ int main(int argc, char **argv) {
   count += test_Context();
   std::cout << endl << endl;
   count += test_Entity();
+  std::cout << endl << endl;
+  count += test_EntityStream();
+  std::cout << endl << endl;
+  count += test_Engine();
+  std::cout << endl << endl;
+
   std::cout << "Total FAILED: " << count << endl;
   if (!count) {
     std::cout << "TESTS SUCCES";
