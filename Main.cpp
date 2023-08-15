@@ -246,9 +246,28 @@ int test_Engine() {
     count++;
     std::cout << "FAIL: Entity1 not found." << endl;
   }
-  // EntityStream strm = engine.GetEntityStream();
-  // std::set<Entity*> withTagTarget = strm.WithTag(Component::Target);
-  // std::set<Entity*> withTagSprite = strm.WithTag(Component::Sprite);
+  EntityStream strm = engine.GetEntityStream();
+  std::set<Entity*> withTagTarget = strm.WithTag(Component::Target);
+  std::set<Entity*> withTagSprite = strm.WithTag(Component::Sprite);
+  if (withTagTarget.count(&entity1) == 1) { std::cout << "Entity with Target tag found well." << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: Entity with Target tag not found well." << endl; 
+  }
+  if (withTagSprite.empty()) { std::cout << "No Entities with sprite components. As expected." << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: There where no enitites expected with sprite component." << endl;
+  }
+
+  engine.RemoveEntity(&entity1);
+  strm = engine.GetEntityStream();
+  withTagTarget = strm.WithTag(Component::Target);
+  if (withTagTarget.empty()) { std::cout << "No Entities with target components. As expected." << endl; }
+  else {
+    count++;
+    std::cout << "FAIL: There where no enitites expected with Target component." << endl;
+  }
 
   std::cout << "Total result for Engine tests: " << count << " Fails" << endl;
   if (!count) {

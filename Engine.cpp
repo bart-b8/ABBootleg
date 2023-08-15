@@ -49,4 +49,3 @@ EntityStream& Engine::GetEntityStream() {
 Context& Engine::GetContext() {
     return context_;
 }
-
