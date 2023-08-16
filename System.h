@@ -2,6 +2,8 @@
 #define SYSTEM_H
 
 #include "Allkit.h"
+#include <vector>
+
 class Engine;
 
 class System {
