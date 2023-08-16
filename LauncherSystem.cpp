@@ -5,6 +5,7 @@
 #include "./Missile_PurpleComponent.h"
 #include "./Missile_YellowComponent.h"
 #include "PositionComponent.h"
+#include "./Polygon_Component.h"
 #include "Sprite.h"
 #include "Sprite_Component.h"
 #include "TargetSystem.h"
@@ -28,6 +29,18 @@ LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
   cat->Add(cat_sprite);
   cat->Add(loc);
   engine_.AddEntity(cat);
+
+  std::vector<Point> poly1;
+  poly1.push_back(Point(loc->pos.x_ + 12, loc->pos.y_ + 153));
+  poly1.push_back(Point((Config::Get().Map()["missiles.dst_width"] + 5) *
+                        (Config::Get().Map()["missiles.missiles"] -1) +
+                        Config::Get().Map()["missiles.radius_x"],
+                        Config::Get().Map()["missiles.current_y_offset"] +
+                        Config::Get().Map()["missiles.dst_height"]));
+  Polygon_Component * poly1cmpnt = new Polygon_Component(poly1);
+  Entity * poly1ent = new Entity;
+  poly1ent->Add(poly1cmpnt);
+  engine_.AddEntity(poly1ent);
 
   CreateQueue();
 }

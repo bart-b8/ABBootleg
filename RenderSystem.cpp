@@ -3,6 +3,7 @@
 #include "./PositionComponent.h"
 #include "./Sprite.h"
 #include "./Sprite_Component.h"
+#include "./Polygon_Component.h"
 #include "Component.h"
 
 void RenderSystem::DrawEntitys() {
@@ -28,8 +29,15 @@ void RenderSystem::DrawEntitys() {
   }
 
   // TODO(BD): Draw all string entities
-  // TODO(BD): Draw all Line entities
   // TODO(BD): Draw all Poly entities
+  std::set<Entity *> wthTagPolygon =
+      engine_.GetEntityStream().WithTag(Component::Polygon);
+  for (Entity *entity : wthTagPolygon) {
+    Polygon_Component * polycomp = dynamic_cast<Polygon_Component *>(
+        entity->GetComponent(Component::Polygon));
+    std::vector<Point> polygon = polycomp->body_;
+    ak_->DrawPoly(polygon);
+  }
 }
 
 bool RenderSystem::InScreenWindow() {
