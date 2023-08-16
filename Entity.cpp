@@ -33,3 +33,9 @@ std::vector<Component*>& Entity::GetComponents() {
     return vec_comps;
 }
 
+Entity::~Entity() {
+  for (Component * comp : vec_comps) {
+    delete comp;
+  }
+}
+
