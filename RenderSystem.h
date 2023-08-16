@@ -9,7 +9,7 @@
 
 class RenderSystem : public System {
  public:
-  RenderSystem(Engine &engine) : System(engine) { ak_ = &Allkit::Get(); }
+  RenderSystem(Engine &engine) : System(engine) {}
 
   void Update();
 
@@ -18,11 +18,6 @@ class RenderSystem : public System {
   bool InScreenWindow();
 
   void DrawScores();
-
- private:
-  Allkit *ak_ = NULL;
-
-  Point convert_to_Allegro_Coordinate_System(const Point);
 };
 
 #endif

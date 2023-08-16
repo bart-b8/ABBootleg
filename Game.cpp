@@ -31,21 +31,6 @@ void Game::render_placeholder() const {
 bool Game::Run() {
   // TODO(BD) : Implement simple game.
   bool exit_ = false;
-  Entity * missile = new Entity;
-  Missile_CurrentComponent * missile_current = new Missile_CurrentComponent;
-  Missile_YellowComponent * missile_yellow = new Missile_YellowComponent;
-  Sprite_Component * sprite = new Sprite_Component;
-  PositionComponent * pos = new PositionComponent;
-  pos->pos.x_ = 200;
-  pos->pos.y_ = 200;
-  sprite->sprite = Sprite::SPRT_MISSILE_1;
-  pos->pos.x_ = 0;
-  pos->pos.y_ = 100;
-  missile->Add(missile_current);
-  missile->Add(missile_yellow);
-  missile->Add(sprite);
-  missile->Add(pos);
-  engine_.AddEntity(missile);
 
   LauncherSystem * launcher = new LauncherSystem(engine_);
   RenderSystem * renderer = new RenderSystem(engine_);
@@ -53,11 +38,15 @@ bool Game::Run() {
   engine_.AddSystem(renderer);
 
   while (!exit_) {
+
+    ak_->StartTimer();
+
     engine_.Update();
 
     ak_->NextEvent();
 
-    if (ak_->IsEnterKeyPushed()) {
+    if (ak_->IsEnterKeyPushed() || ak_->IsWindowClosed()) {
+      ak_->StopTimer();
       exit_ = true;
     }
   }

@@ -11,6 +11,8 @@ public:
   Point() {}
   Point(double x, double y) : x_(x), y_(y) {}
 
+  Point operator+(const Point &o) { return Point(x_ + o.x_, y_ + o.y_); }
+
   Point operator-(const Point &o) { return Point(x_ - o.x_, y_ - o.y_); }
 
   double operator>>(const Point &o) { return x_ * o.x_ + y_ * o.y_; }

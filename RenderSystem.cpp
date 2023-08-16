@@ -5,19 +5,10 @@
 #include "./Sprite_Component.h"
 #include "Component.h"
 
-Point RenderSystem::convert_to_Allegro_Coordinate_System(const Point classic) {
-  std::map<std::string, double> cfg = Config::Get().Map();
-  Point out;
-  out.x_ = classic.x_;
-  out.y_ =
-      cfg["game.playground_height"] - classic.y_;
-  return out;
-}
 void RenderSystem::DrawEntitys() {
   std::set<Entity *> wthTagSprite =
       engine_.GetEntityStream().WithTag(Component::Sprite);
   std::map<std::string, double> cfg = Config::Get().Map();
-  // TODO(BD): Figure out how the coordinates work.
   for (Entity *entity : wthTagSprite) {
     Sprite_Component *sprtComp = dynamic_cast<Sprite_Component *>(
         entity->GetComponent(Component::Sprite));
@@ -32,10 +23,6 @@ void RenderSystem::DrawEntitys() {
             ->pos);
     float dx = pos_al.x_;
     float dy = pos_al.y_ - dh;
-    // TODO(BD): improve convert_to_Allegro_Coordinate_System
-    // Can we leave missiles.dst_height out of
-    // convert_to_Allegro_Coordinate_System? Can we instead redefine the base
-    // coordiantes using sx and sy parameters to DrawScaledBitmap?
     ak_->DrawScaledBitmap(sprite, static_cast<float>(0), static_cast<float>(0),
                           sw, sh, dx, dy, dw, dh);
   }

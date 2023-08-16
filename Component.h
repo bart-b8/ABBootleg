@@ -30,7 +30,7 @@ class Component {
   virtual int GetWeight(int level) { return -1; }
 
   // Geeft het type van een missile component terug
-  virtual int GetType() { return -1; }
+  virtual Type GetType() { return Yellow; }
 
   virtual ~Component() {}
 };
