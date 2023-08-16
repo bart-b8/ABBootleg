@@ -6,20 +6,17 @@
 #include "Engine.h"
 
 class Game {
-  public:
+ public:
     Game(Context &context) : context_(context),
                              engine_(context) {
         ak_ = &Allkit::Get();
-    };
+    }
 
-    ~Game(){
-        // TODO
-    };
+    ~Game() {}
 
     bool Run();
-  
 
-  private:
+ private:
     Allkit *ak_ = NULL;
     Context &context_;
     Engine engine_;

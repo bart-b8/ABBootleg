@@ -11,6 +11,8 @@ class System {
   System(Engine &engine): engine_(engine) {}
 
   virtual void Update() = 0;
+
+  virtual ~System() {}
 };
 
 #endif

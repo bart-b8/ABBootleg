@@ -44,3 +44,13 @@ void Engine::Update() {
 EntityStream &Engine::GetEntityStream() { return *entityStream; }
 
 Context &Engine::GetContext() { return context_; }
+
+Engine::~Engine() {
+  delete entityStream;
+  for (Entity * enty : vec_entitys) {
+    delete enty;
+  }
+  for (System * sysy : vec_systems) {
+    delete sysy;
+  }
+}

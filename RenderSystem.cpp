@@ -33,6 +33,10 @@ void RenderSystem::DrawEntitys() {
                           dx, dy, cfg["missiles.dst_width"],
                           cfg["missiles.dst_height"]);
   }
+
+  // TODO(BD): Draw all string entities
+  // TODO(BD): Draw all Line entities
+  // TODO(BD): Draw all Poly entities
 }
 
 bool RenderSystem::InScreenWindow() {

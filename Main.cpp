@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-// #define TEST
+#define TEST
 #ifdef TEST
 #include "./Context.h"
 #include "./Entity.h"
@@ -177,7 +177,7 @@ int test_Entity() {
   std::cout << "Test for 2 components" << endl;
   std::cout << "No tests implemented yet." << endl;
 
-  delete trgtComp;
+  // delete trgtComp;
   std::cout << "Total result for Entity tests: " << count << " Fails" << endl;
   if (!count) {
     std::cout << "Entity Tests SUCCES" << endl;
@@ -190,9 +190,9 @@ int test_Entity() {
 int test_EntityStream() {
   int count = 0;
   EntityStream strm;
-  Target_Component tgtcomp;
+  Target_Component * tgtcomp = new Target_Component;
   Entity enty;
-  enty.Add(&tgtcomp);
+  enty.Add(tgtcomp);
   strm.EntityUpdated(&enty, enty.GetTags(), false);
   std::set<Entity *> wthTagTarget = strm.WithTag(Component::Target);
   std::set<Entity *> wthTagSprite = strm.WithTag(Component::Sprite);
@@ -227,9 +227,9 @@ int test_EntityStream() {
 int test_Engine() {
   int count = 0;
 
-  Target_Component tgtcomp;
-  Entity entity1;
-  entity1.Add(&tgtcomp);
+  Target_Component * tgtcomp = new Target_Component;
+  Entity * entity1 = new Entity;
+  entity1->Add(tgtcomp);
   Context context = Context();
   Engine engine = Engine(context);
 
@@ -237,9 +237,9 @@ int test_Engine() {
   std::cout << "Test 1: AddEntity" << endl;
   // Should add entity to engine via pointer
   // AND should update the entity stream.
-  engine.AddEntity(&entity1);
+  engine.AddEntity(entity1);
   std::vector<Entity*> entities = engine.GetEntities();
-  if (entities[0] == &entity1) {
+  if (entities[0] == entity1) {
     std::cout << "entitity1 found in Engine" << endl;
   } else {
     count++;
@@ -248,7 +248,7 @@ int test_Engine() {
   EntityStream strm = engine.GetEntityStream();
   std::set<Entity*> withTagTarget = strm.WithTag(Component::Target);
   std::set<Entity*> withTagSprite = strm.WithTag(Component::Sprite);
-  if (withTagTarget.count(&entity1) == 1) { std::cout << "Entity with Target tag found well." << endl; }
+  if (withTagTarget.count(entity1) == 1) { std::cout << "Entity with Target tag found well." << endl; }
   else {
     count++;
     std::cout << "FAIL: Entity with Target tag not found well." << endl; 
@@ -259,7 +259,7 @@ int test_Engine() {
     std::cout << "FAIL: There where no enitites expected with sprite component." << endl;
   }
 
-  engine.RemoveEntity(&entity1);
+  engine.RemoveEntity(entity1);
   strm = engine.GetEntityStream();
   withTagTarget = strm.WithTag(Component::Target);
   if (withTagTarget.empty()) { std::cout << "No Entities with target components. As expected." << endl; }
@@ -268,6 +268,7 @@ int test_Engine() {
     std::cout << "FAIL: There where no enitites expected with Target component." << endl;
   }
 
+  delete entity1;
   std::cout << "Total result for Engine tests: " << count << " Fails" << endl;
   if (!count) {
     std::cout << "Engine Tests SUCCES" << endl;

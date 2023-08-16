@@ -54,7 +54,7 @@ bool Game::Run() {
 
     ak_->NextEvent();
 
-    if (ak_->IsEnterKeyPushed() || ak_->IsSpaceBarPushed()) {
+    if (ak_->IsEnterKeyPushed()) {
       exit_ = true;
     }
   }

@@ -20,7 +20,7 @@ class Engine {
     entityStream = new EntityStream;
   }
 
-  ~Engine() { delete entityStream; }
+  ~Engine();
 
     void AddEntity(Entity *entity);
 
