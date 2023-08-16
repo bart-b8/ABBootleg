@@ -38,6 +38,8 @@ bool Game::Run() {
   pos->pos.x_ = 200;
   pos->pos.y_ = 200;
   sprite->sprite = Sprite::SPRT_MISSILE_1;
+  pos->pos.x_ = 0;
+  pos->pos.y_ = 100;
   missile->Add(missile_current);
   missile->Add(missile_yellow);
   missile->Add(sprite);

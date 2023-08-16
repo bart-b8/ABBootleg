@@ -21,6 +21,8 @@ class Entity {
     std::vector<Component *> &GetComponents();
 
     std::vector<Component::Tag> &GetTags();
+
+  ~Entity();
 };
 
 #endif

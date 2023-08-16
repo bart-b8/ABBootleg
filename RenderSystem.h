@@ -8,7 +8,7 @@
 #include <vector>
 
 class RenderSystem : public System {
-public:
+ public:
   RenderSystem(Engine &engine) : System(engine) { ak_ = &Allkit::Get(); }
 
   void Update();
@@ -19,8 +19,10 @@ public:
 
   void DrawScores();
 
-private:
+ private:
   Allkit *ak_ = NULL;
+
+  Point convert_to_Allegro_Coordinate_System(const Point);
 };
 
 #endif

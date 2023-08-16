@@ -5,9 +5,11 @@
 
 class Sprite_Component : public Component {
  public:
-    enum Sprite sprite;
+  enum Sprite sprite;
 
-    Tag GetTag() override {
-        return Tag::Sprite;
-    }
+  Tag GetTag() override {
+      return Tag::Sprite;
+  }
+
+  virtual ~Sprite_Component() {}
 };
