@@ -7,6 +7,7 @@
 #include "PositionComponent.h"
 #include "Sprite.h"
 #include "Sprite_Component.h"
+#include "TargetSystem.h"
 
 LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
   // TODO(BD): When Constructing:
@@ -22,7 +23,7 @@ LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
   cat_sprite->src_width = Config::Get().Map()["launcher.src_width"];
   cat_sprite->src_height = Config::Get().Map()["launcher.src_height"];
   loc->pos.x_ = (Config::Get().Map()["missiles.missiles"] - 2) *
-              (Config::Get().Map()["missiles.dst_width"] + 5);
+                (Config::Get().Map()["missiles.dst_width"] + 5);
   loc->pos.y_ = 0;
   cat->Add(cat_sprite);
   cat->Add(loc);
@@ -97,8 +98,8 @@ void LauncherSystem::CreateQueue() {
 void LauncherSystem::AddToQueue() {
   queue.pop_front();
   int i = 0;
-  for (Entity * queued : queue) {
-    Component* pos = queued->GetComponent(Component::Position);
+  for (Entity *queued : queue) {
+    Component *pos = queued->GetComponent(Component::Position);
     SetPosition(dynamic_cast<PositionComponent *>(pos), i++);
   }
   Entity *missile = new Entity;
@@ -111,33 +112,50 @@ void LauncherSystem::MouseLocation() {}
 
 bool LauncherSystem::MouseOnMissile() {
   Point mousePoint = convert_to_Classic_Coordinate_System(ak_->GetMouse());
-  Point offset = Point(Config::Get().Map()["missiles.radius_x"], Config::Get().Map()["missiles.radius_y"]);
-  Point missile = dynamic_cast<PositionComponent *>(queue.front()->GetComponent(Component::Position))->pos;
+  Point offset = Point(Config::Get().Map()["missiles.radius_x"],
+                       Config::Get().Map()["missiles.radius_y"]);
+  Point missile = dynamic_cast<PositionComponent *>(
+                      queue.front()->GetComponent(Component::Position))
+                      ->pos;
   missile = missile + offset;
   Component::Type missileType;
   for (Component::Tag tag : queue.front()->GetTags()) {
     if (tag == Component::Missile_Black) {
-      missileType = queue.front()->GetComponent(Component::Missile_Black)->GetType();
+      missileType =
+          queue.front()->GetComponent(Component::Missile_Black)->GetType();
     } else if (tag == Component::Missile_Green) {
-      missileType = queue.front()->GetComponent(Component::Missile_Green)->GetType();
+      missileType =
+          queue.front()->GetComponent(Component::Missile_Green)->GetType();
     } else if (tag == Component::Missile_Purple) {
-      missileType = queue.front()->GetComponent(Component::Missile_Purple)->GetType();
+      missileType =
+          queue.front()->GetComponent(Component::Missile_Purple)->GetType();
     } else if (tag == Component::Missile_Yellow) {
-      missileType = queue.front()->GetComponent(Component::Missile_Yellow)->GetType();
+      missileType =
+          queue.front()->GetComponent(Component::Missile_Yellow)->GetType();
     }
   }
   switch (missileType) {
-    case Component::Purple:
-    case Component::Yellow:
-    case Component::Black:
-      if (mousePoint*missile < Config::Get().Map()["missiles.radius_x"]) {
-        return true;
-      } else { return false; }
-      break;
-    case Component::Green:
-      // TODO(BD): use hitdetection to detect
+  case Component::Purple:
+  case Component::Yellow:
+  case Component::Black:
+    if (mousePoint * missile < Config::Get().Map()["missiles.radius_x"]) {
       return true;
-      break;
+    } else {
+      return false;
+    }
+    break;
+  case Component::Green:
+    // TODO(BD): use hitdetection to detect
+    std::vector<Point> coor_Polytriangle;
+    std::vector<Point> coor_mouse;
+
+    coor_Polytriangle.push_back(missile - offset);
+    coor_Polytriangle.push_back(
+        missile - offset + Point(Config::Get().Map()["missiles.dst_width"], 0));
+    coor_Polytriangle.push_back(
+        missile + Point(0, Config::Get().Map()["missiles.radius_y"]));
+    coor_mouse.push_back(mousePoint);
+    return CheckCollision(coor_Polytriangle, coor_mouse);
   }
-  return true;
+  return false;
 }
