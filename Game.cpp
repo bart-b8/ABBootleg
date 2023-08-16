@@ -36,6 +36,8 @@ bool Game::Run() {
   Sprite_Component * sprite = new Sprite_Component;
   PositionComponent * pos = new PositionComponent;
   sprite->sprite = Sprite::SPRT_MISSILE_1;
+  pos->pos.x_ = 0;
+  pos->pos.y_ = 100;
   missile->Add(missile_current);
   missile->Add(missile_yellow);
   missile->Add(sprite);
