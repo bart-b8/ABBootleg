@@ -8,6 +8,8 @@
 
 class TargetSystem : public System {
  public:
+  TargetSystem(Engine &engine): System(engine) {}
+
   void Update();
 };
 
