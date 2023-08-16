@@ -5,6 +5,7 @@
 #include "./Missile_YellowComponent.h"
 #include "RenderSystem.h"
 #include "./PositionComponent.h"
+#include "./LauncherSystem.h"
 
 // Deprecated. Should not be needed anymore after v0.1
 void Game::render_placeholder() const {
@@ -46,7 +47,9 @@ bool Game::Run() {
   missile->Add(pos);
   engine_.AddEntity(missile);
 
+  LauncherSystem * launcher = new LauncherSystem(engine_);
   RenderSystem * renderer = new RenderSystem(engine_);
+  engine_.AddSystem(launcher);
   engine_.AddSystem(renderer);
 
   while (!exit_) {

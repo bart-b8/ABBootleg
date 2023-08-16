@@ -1,6 +1,5 @@
 #include "LauncherSystem.h"
 
-/*
 void LauncherSystem::Update(){
 
 }
@@ -12,19 +11,10 @@ void LauncherSystem::AddToQueue(){
 
 }
 
-double LauncherSystem::WeightedAverage(){
-
-}
-
 void LauncherSystem::MouseLocation(){
 
 }
 
 bool LauncherSystem::MouseOnMissile(){
-
+  return true;
 }
-
-void LauncherSystem::MouseRecord(){
-
-}
-*/

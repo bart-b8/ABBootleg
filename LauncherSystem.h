@@ -1,30 +1,54 @@
 #ifndef LAUNCHERSYSTEM_H
 #define LAUNCHERSYSTEM_H
 
-#include <vector>
+#include <list>
 
+#include "Component.h"
+#include "Entity.h"
 #include "Point.h"
 #include "System.h"
+#include "./Sprite_Component.h"
+#include "./PositionComponent.h"
+#include "./Sprite.h"
+#include "./Engine.h"
+#include "./Config.h"
 
 class LauncherSystem : public System {
-  public:
-    void Update();
+ public:
+  LauncherSystem(Engine &engine): System(engine) {
+    // TODO(BD): When Constructing:
+    // - add entities: catapult, lines (springs),
+    // missile in catapult and
+    // missiles in queue
+    Entity * cat = new Entity;
+    Sprite_Component * cat_sprite = new Sprite_Component;
+    PositionComponent * loc = new PositionComponent;
+    cat_sprite->sprite = SPRT_LAUNCHER;
+    cat_sprite->dst_width = Config::Get().Map()["launcher.dst_width"];
+    cat_sprite->dst_height = Config::Get().Map()["launcher.dst_height"];
+    cat_sprite->src_width = Config::Get().Map()["launcher.src_width"];
+    cat_sprite->src_height = Config::Get().Map()["launcher.src_height"];
+    loc->pos.x_ = 120;
+    loc->pos.y_ = 0;
+    cat->Add(cat_sprite);
+    cat->Add(loc);
+    engine_.AddEntity(cat);
+  }
 
-    void CreateQueue(std::vector<int> vec_queue);
+  ~LauncherSystem() {}  // Memeory management by Engine.
 
-    void AddToQueue(std::vector<int> vec_queue, int AddMissile);
+  void Update();
 
-    double WeightedAverage();
+  void CreateQueue();
 
-    void MouseLocation();
+  void AddToQueue();
 
-    bool MouseOnMissile();
+  void MouseLocation();
 
-    void MouseRecord();
+  bool MouseOnMissile();
 
-  private:
-    std::vector<int> vec_queue;
-    std::vector<double> vec_coordinates;
+ private:
+  std::list<Component *> vec_queue;
 };
 
 #endif

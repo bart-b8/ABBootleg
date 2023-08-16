@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-#define TEST
+// #define TEST
 #ifdef TEST
 #include "./Context.h"
 #include "./Entity.h"

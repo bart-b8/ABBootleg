@@ -1,3 +1,6 @@
+#ifndef POSITIONCOMP
+#define POSITIONCOMP
+
 #include "Component.h"
 #include "./Point.h"
 
@@ -13,3 +16,5 @@ class PositionComponent : public Component {
     return Tag::Position;
   }
 };
+
+#endif  // POSITIONCOMP
