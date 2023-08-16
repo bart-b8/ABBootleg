@@ -10,7 +10,7 @@ Point RenderSystem::convert_to_Allegro_Coordinate_System(const Point classic) {
   Point out;
   out.x_ = classic.x_;
   out.y_ =
-      cfg["game.playground_height"] - cfg["missiles.dst_height"] - classic.y_;
+      cfg["game.playground_height"] - classic.y_;
   return out;
 }
 void RenderSystem::DrawEntitys() {
@@ -19,19 +19,25 @@ void RenderSystem::DrawEntitys() {
   std::map<std::string, double> cfg = Config::Get().Map();
   // TODO(BD): Figure out how the coordinates work.
   for (Entity *entity : wthTagSprite) {
-    Sprite sprite = dynamic_cast<Sprite_Component *>(
-                        entity->GetComponent(Component::Sprite))
-                        ->sprite;
+    Sprite_Component *sprtComp = dynamic_cast<Sprite_Component *>(
+        entity->GetComponent(Component::Sprite));
+    Sprite sprite = sprtComp->sprite;
+    float sw = sprtComp->src_width;
+    float sh = sprtComp->src_height;
+    float dw = sprtComp->dst_width;
+    float dh = sprtComp->dst_height;
     Point pos_al = convert_to_Allegro_Coordinate_System(
         (dynamic_cast<PositionComponent *>(
              entity->GetComponent(Component::Position)))
             ->pos);
     float dx = pos_al.x_;
-    float dy = pos_al.y_;
+    float dy = pos_al.y_ - dh;
+    // TODO(BD): improve convert_to_Allegro_Coordinate_System
+    // Can we leave missiles.dst_height out of
+    // convert_to_Allegro_Coordinate_System? Can we instead redefine the base
+    // coordiantes using sx and sy parameters to DrawScaledBitmap?
     ak_->DrawScaledBitmap(sprite, static_cast<float>(0), static_cast<float>(0),
-                          cfg["missiles.src_width"], cfg["missiles.src_height"],
-                          dx, dy, cfg["missiles.dst_width"],
-                          cfg["missiles.dst_height"]);
+                          sw, sh, dx, dy, dw, dh);
   }
 
   // TODO(BD): Draw all string entities
