@@ -5,12 +5,17 @@
 
 #include "Point.h"
 #include "System.h"
+#include "Engine.h"
+
+
 
 class TargetSystem : public System {
  public:
-  TargetSystem(Engine &engine): System(engine) {}
+  TargetSystem(Engine &engine);
 
   void Update();
+ private:
+  std::vector<Point> grid;
 };
 
 #endif

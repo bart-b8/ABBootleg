@@ -6,13 +6,14 @@
 #include <iostream>
 #include <stdlib.h>
 
-// #define TEST
+#define TEST
 #ifdef TEST
 #include "./Context.h"
 #include "./Entity.h"
 #include "./Engine.h"
 #include "./Point.h"
 #include "./Target_Component.h"
+#include "./TargetSystem.h"
 
 int test_Config_Set() {
   int count = 0;
@@ -277,6 +278,71 @@ int test_Engine() {
   }
   return count;
 }
+
+int test_TargetSystem() {
+  int count = 0;
+  Context context = Context();
+  context.pth_level = "./assets/levels/level1.txt";
+  context.exit_game = 0;
+  Engine engine(context);
+
+  TargetSystem * tgtsys = new TargetSystem(engine);
+
+  if (!tgtsys) { std::cout << "FAIL: unable to generate pointer." << endl; count++; }
+  if (engine.GetContext().exit_game != 0) {
+    count++;
+  std::cout << "FAIL: we expected this not to change exit_game." << endl;
+  }
+
+  delete tgtsys;
+
+  engine.GetContext().pth_level = "./assets/levels/leel_missing.txt";
+  engine.GetContext().exit_game = 0;
+
+  TargetSystem * tgtsys2 = new TargetSystem(engine);
+
+  if (!tgtsys2) { std::cout << "FAIL: unable to generate pointer." << endl; count++; }
+  if (engine.GetContext().exit_game != -1) {
+    count++;
+  std::cout << "FAIL: we expected this to change exit_game to -1." << endl;
+  }
+
+  delete tgtsys2;
+
+  engine.GetContext().pth_level = "./assets/levels/level_missing.txt";
+  engine.GetContext().exit_game = 0;
+
+  TargetSystem * tgtsys3 = new TargetSystem(engine);
+
+  if (!tgtsys3) { std::cout << "FAIL: unable to generate pointer." << endl; count++; }
+  if (engine.GetContext().exit_game != -2) {
+    count++;
+  std::cout << "FAIL: we expected this to change exit_game to -2." << endl;
+  }
+
+  delete tgtsys3;
+
+  engine.GetContext().pth_level = "./assets/levels/level_wrongchar.txt";
+  engine.GetContext().exit_game = 0;
+
+  TargetSystem * tgtsys4 = new TargetSystem(engine);
+
+  if (!tgtsys4) { std::cout << "FAIL: unable to generate pointer." << endl; count++; }
+  if (engine.GetContext().exit_game != -2) {
+    count++;
+  std::cout << "FAIL: we expected this to change exit_game to -2." << endl;
+  }
+
+  delete tgtsys4;
+
+  std::cout << "Total result for TargetSystem tests: " << count << " Fails" << endl;
+  if (!count) {
+    std::cout << "TargetSystem Tests SUCCES" << endl;
+  } else {
+    std::cout << "TargetSystem Test FAILURE" << endl;
+  }
+  return count;
+}
 #endif  // TEST
 
 void InitWsl() {
@@ -343,6 +409,8 @@ int main(int argc, char **argv) {
   count += test_EntityStream();
   std::cout << endl << endl;
   count += test_Engine();
+  std::cout << endl << endl;
+  count += test_TargetSystem();
   std::cout << endl << endl;
 
   std::cout << "Total FAILED: " << count << endl;

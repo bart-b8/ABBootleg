@@ -31,7 +31,7 @@ void Game::render_placeholder() const {
 
 bool Game::Run() {
   // TODO(BD) : Implement simple game.
-  bool exit_ = false;
+  context_.exit_game = 0;
 
   LauncherSystem * launcher = new LauncherSystem(engine_);
   MissileSystem * missileSys = new MissileSystem(engine_);
@@ -42,15 +42,28 @@ bool Game::Run() {
 
   ak_->StartTimer();
 
-  while (!exit_) {
+  while (context_.exit_game == 0) {
     engine_.Update();
 
     ak_->NextEvent();
 
     if (ak_->IsEnterKeyPushed() || ak_->IsWindowClosed()) {
-      ak_->StopTimer();
-      exit_ = true;
+      context_.exit_game = 1;
     }
   }
+  ak_->StopTimer();
+
+  switch (context_.exit_game) {
+    case 2:
+    // TODO(BD): Show score screen_width
+    // TODO(BD): store highscore file.
+    break;
+    case -1:
+    case -2:
+      // TODO(BD): show level file error page
+      break;
+  }
+
+  
   return true;
 }
