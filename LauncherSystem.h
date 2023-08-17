@@ -2,6 +2,7 @@
 #define LAUNCHERSYSTEM_H
 
 #include <list>
+#include <vector>
 
 #include "Component.h"
 #include "Entity.h"
@@ -12,6 +13,7 @@
 #include "./Sprite.h"
 #include "./Engine.h"
 #include "./Config.h"
+#include "./Polygon_Component.h"
 
 class LauncherSystem : public System {
  public:
@@ -37,6 +39,8 @@ class LauncherSystem : public System {
 
  private:
   std::list<Entity *> queue;
+  std::vector<Polygon_Component *> seat_poly_comps;
+  std::vector<Point> ref_seat_Points;
 };
 
 #endif

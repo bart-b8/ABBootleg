@@ -37,10 +37,9 @@ bool Game::Run() {
   engine_.AddSystem(launcher);
   engine_.AddSystem(renderer);
 
+  ak_->StartTimer();
+
   while (!exit_) {
-
-    ak_->StartTimer();
-
     engine_.Update();
 
     ak_->NextEvent();

@@ -28,6 +28,13 @@ public:
       y_ = y_ / l;
     }
   }
+
+  void Scale(const double a) {
+    if (a != 1.0) {
+      x_ = x_ * a;
+      y_ = y_ * a;
+    }
+  }
 };
 
 #endif

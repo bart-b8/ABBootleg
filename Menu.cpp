@@ -147,9 +147,7 @@ void Menu::StartGame() {
   game.Run();
 }
 
-void Menu::OpenReplay() {
-  // TODO(BD): Not needed anymore
-}
+void Menu::OpenReplay() {}
 
 void Menu::display_menu(int index) {
   ak_->ClearScreen();

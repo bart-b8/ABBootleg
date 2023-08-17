@@ -4,17 +4,16 @@
 #include "./Missile_GreenComponent.h"
 #include "./Missile_PurpleComponent.h"
 #include "./Missile_YellowComponent.h"
-#include "PositionComponent.h"
 #include "./Polygon_Component.h"
+#include "PositionComponent.h"
 #include "Sprite.h"
 #include "Sprite_Component.h"
 #include "TargetSystem.h"
+#include <vector>
+
+#define I 1000
 
 LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
-  // TODO(BD): When Constructing:
-  // - add entities: lines (springs),
-  // missile in catapult and
-  // missiles in queue
   Entity *cat = new Entity;
   Sprite_Component *cat_sprite = new Sprite_Component;
   PositionComponent *loc = new PositionComponent;
@@ -32,22 +31,140 @@ LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
 
   std::vector<Point> poly1;
   poly1.push_back(Point(loc->pos.x_ + 12, loc->pos.y_ + 153));
-  poly1.push_back(Point((Config::Get().Map()["missiles.dst_width"] + 5) *
-                        (Config::Get().Map()["missiles.missiles"] -1) +
-                        Config::Get().Map()["missiles.radius_x"],
-                        Config::Get().Map()["missiles.current_y_offset"] +
-                        Config::Get().Map()["missiles.dst_height"]));
-  Polygon_Component * poly1cmpnt = new Polygon_Component(poly1);
-  Entity * poly1ent = new Entity;
+  Point pnt1 = Point((Config::Get().Map()["missiles.dst_width"] + 5) *
+                             (Config::Get().Map()["missiles.missiles"] - 1) +
+                         Config::Get().Map()["missiles.radius_x"],
+                     Config::Get().Map()["missiles.current_y_offset"] +
+                         Config::Get().Map()["missiles.dst_height"]);
+  poly1.push_back(pnt1);
+  ref_seat_Points.push_back(pnt1);
+  Polygon_Component *poly1cmpnt = new Polygon_Component(poly1);
+  seat_poly_comps.push_back(poly1cmpnt);
+  Entity *poly1ent = new Entity;
   poly1ent->Add(poly1cmpnt);
   engine_.AddEntity(poly1ent);
+
+  std::vector<Point> poly2;
+  poly2.push_back(Point(loc->pos.x_ + 16, loc->pos.y_ + 133));
+  Point pnt2 = Point((Config::Get().Map()["missiles.dst_width"] + 5) *
+                             (Config::Get().Map()["missiles.missiles"] - 1) +
+                         Config::Get().Map()["missiles.radius_x"],
+                     Config::Get().Map()["missiles.current_y_offset"]);
+  poly2.push_back(pnt2);
+  ref_seat_Points.push_back(pnt2);
+  Polygon_Component *poly2cmpnt = new Polygon_Component(poly2);
+  seat_poly_comps.push_back(poly2cmpnt);
+  Entity *poly2ent = new Entity;
+  poly2ent->Add(poly2cmpnt);
+  engine_.AddEntity(poly2ent);
+
+  std::vector<Point> poly3;
+  poly3.push_back(Point(loc->pos.x_ + 102, loc->pos.y_ + 125));
+  Point pnt3 = Point((Config::Get().Map()["missiles.dst_width"] + 5) *
+                             (Config::Get().Map()["missiles.missiles"] - 1) +
+                         Config::Get().Map()["missiles.radius_x"],
+                     Config::Get().Map()["missiles.current_y_offset"] +
+                         Config::Get().Map()["missiles.dst_height"]);
+  poly3.push_back(pnt3);
+  ref_seat_Points.push_back(pnt3);
+  Polygon_Component *poly3cmpnt = new Polygon_Component(poly3);
+  seat_poly_comps.push_back(poly3cmpnt);
+  Entity *poly3ent = new Entity;
+  poly3ent->Add(poly3cmpnt);
+  engine_.AddEntity(poly3ent);
+
+  std::vector<Point> poly4;
+  poly4.push_back(Point(loc->pos.x_ + 92, loc->pos.y_ + 108));
+  Point pnt4 = Point((Config::Get().Map()["missiles.dst_width"] + 5) *
+                             (Config::Get().Map()["missiles.missiles"] - 1) +
+                         Config::Get().Map()["missiles.radius_x"],
+                     Config::Get().Map()["missiles.current_y_offset"]);
+  poly4.push_back(pnt4);
+  ref_seat_Points.push_back(pnt4);
+  Polygon_Component *poly4cmpnt = new Polygon_Component(poly4);
+  seat_poly_comps.push_back(poly4cmpnt);
+  Entity *poly4ent = new Entity;
+  poly4ent->Add(poly4cmpnt);
+  engine_.AddEntity(poly4ent);
 
   CreateQueue();
 }
 
 void LauncherSystem::Update() {
+  static Point mouseRef;
+  static Point missileRefPos;
+  static bool ref = false;
+  static bool releasing = false;
+  bool released = false;
+
   if (ak_->IsMouseClicked() && MouseOnMissile()) {
+    // Record reference mousePoint
+    ref = true;
+    mouseRef = convert_to_Classic_Coordinate_System(ak_->GetMouse());
+    // Record reference position of missile loaded
+    missileRefPos = dynamic_cast<PositionComponent *>(
+                        queue.front()->GetComponent(Component::Position))
+                        ->pos;
+  }
+  if (ref && ak_->HasMouseMoved()) {
+    Point mouseCur = convert_to_Classic_Coordinate_System(ak_->GetMouse());
+    Point diff = mouseCur - mouseRef;
+    // Change position of missile loaded to missileRefPos + diff
+    dynamic_cast<PositionComponent *>(
+        queue.front()->GetComponent(Component::Position))
+        ->pos = missileRefPos + diff;
+    // TODO(BD): Change position of seat_points;
+    for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
+      seat_poly_comps[i]->body_.back() = ref_seat_Points[i] + diff;
+    }
+    engine_.GetContext().screenchange = true;
+  }
+  if (ref && ak_->IsMouseReleased()) {
+    ref = false;
+    releasing = true;
+  }
+  if (releasing) {
+    engine_.GetContext().screenchange = true;
+    static Point dp;
+    Point p = dynamic_cast<PositionComponent *>(
+                  queue.front()->GetComponent(Component::Position))
+                  ->pos;
+    Point diff = p - missileRefPos;
+    Point ddp = diff;
+    ddp.Scale(-(double)1 / (double)I);
+    dp = dp + ddp;
+    p = p + dp;
+    std::cout << "diff x: \t" << diff.x_ << "," << diff.y_ << "\tdpp: \t"
+              << ddp.x_ << "," << ddp.y_ << "\tdp: \t" << dp.x_ << "," << dp.y_
+              << "\tp: \t" << p.x_ << "," << p.y_ << endl;
+    dynamic_cast<PositionComponent *>(
+        queue.front()->GetComponent(Component::Position))
+        ->pos = p;
+    for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
+      Point offset;
+      switch (i) {
+        case 0:
+        case 2:
+          offset = Point(17.5, 35);
+          break;
+        case 1:
+        case 3:
+          offset = Point(17.5, 0);
+          break;
+      }
+      seat_poly_comps[i]->body_.back() = p + offset;
+    }
+    
+    if (abs(dp.x_) > abs(diff.x_)) {
+      dp.Scale(0);
+      releasing = false;
+      released = true;
+    }
+  }
+  if (released) {
+    released = false;
     engine_.RemoveEntity(queue.front());
+    delete queue.front();
     engine_.GetContext().screenchange = true;
     AddToQueue();
   }
@@ -158,7 +275,6 @@ bool LauncherSystem::MouseOnMissile() {
     }
     break;
   case Component::Green:
-    // TODO(BD): use hitdetection to detect
     std::vector<Point> coor_Polytriangle;
     std::vector<Point> coor_mouse;
 

@@ -1,3 +1,5 @@
+#ifndef POLYGON_COMP
+#define POLYGON_COMP
 #include <vector>
 
 #include "./Point.h"
@@ -14,3 +16,4 @@ class Polygon_Component : public Component {
       return Tag::Polygon;
   }
 };
+#endif  // POLYGON_COMP

@@ -15,8 +15,6 @@ class RenderSystem : public System {
 
   void DrawEntitys();
 
-  bool InScreenWindow();
-
   void DrawScores();
 };
 

@@ -29,7 +29,6 @@ void RenderSystem::DrawEntitys() {
   }
 
   // TODO(BD): Draw all string entities
-  // TODO(BD): Draw all Poly entities
   std::set<Entity *> wthTagPolygon =
       engine_.GetEntityStream().WithTag(Component::Polygon);
   for (Entity *entity : wthTagPolygon) {
@@ -40,15 +39,10 @@ void RenderSystem::DrawEntitys() {
   }
 }
 
-bool RenderSystem::InScreenWindow() {
-  // TODO(BD): Implement InScreenWindow.
-  return true;
-}
-
 void RenderSystem::DrawScores() {}
 
 void RenderSystem::Update() {
-  if (!InScreenWindow() || !engine_.GetContext().screenchange) {
+  if (!engine_.GetContext().screenchange) {
     return;
   }
   ak_->ClearScreen();
