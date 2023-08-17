@@ -11,7 +11,7 @@
 #include "TargetSystem.h"
 #include <vector>
 
-#define I 1000
+#define I 10
 
 LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
   Entity *cat = new Entity;
@@ -96,6 +96,7 @@ void LauncherSystem::Update() {
   static bool ref = false;
   static bool releasing = false;
   bool released = false;
+  static Point dp;
 
   if (ak_->IsMouseClicked() && MouseOnMissile()) {
     // Record reference mousePoint
@@ -125,7 +126,6 @@ void LauncherSystem::Update() {
   }
   if (releasing) {
     engine_.GetContext().screenchange = true;
-    static Point dp;
     Point p = dynamic_cast<PositionComponent *>(
                   queue.front()->GetComponent(Component::Position))
                   ->pos;
@@ -156,15 +156,18 @@ void LauncherSystem::Update() {
     }
     
     if (abs(dp.x_) > abs(diff.x_)) {
-      dp.Scale(0);
       releasing = false;
       released = true;
     }
   }
   if (released) {
     released = false;
+    Missile_CurrentComponent * miscurComp = new Missile_CurrentComponent;
     engine_.RemoveEntity(queue.front());
-    delete queue.front();
+    miscurComp->vel = dp;
+    dp.Scale(0);
+    queue.front()->Add(miscurComp);
+    engine_.AddEntity(queue.front());
     engine_.GetContext().screenchange = true;
     AddToQueue();
   }

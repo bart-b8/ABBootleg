@@ -3,6 +3,7 @@
 #include "./Sprite_Component.h"
 #include "./Missile_CurrentComponent.h"
 #include "./Missile_YellowComponent.h"
+#include "MissileSystem.h"
 #include "RenderSystem.h"
 #include "./PositionComponent.h"
 #include "./LauncherSystem.h"
@@ -33,8 +34,10 @@ bool Game::Run() {
   bool exit_ = false;
 
   LauncherSystem * launcher = new LauncherSystem(engine_);
+  MissileSystem * missileSys = new MissileSystem(engine_);
   RenderSystem * renderer = new RenderSystem(engine_);
   engine_.AddSystem(launcher);
+  engine_.AddSystem(missileSys);
   engine_.AddSystem(renderer);
 
   ak_->StartTimer();

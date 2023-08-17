@@ -1,3 +1,5 @@
+#ifndef CURRENTCOMP
+#define CURRENTCOMP
 
 #include "Component.h"
 #include "./Point.h"
@@ -11,3 +13,4 @@ class Missile_CurrentComponent : public Component {
         return Tag::Missile_Current;
     }
 };
+#endif // !CURRENTCOMP

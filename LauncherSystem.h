@@ -10,6 +10,7 @@
 #include "System.h"
 #include "./Sprite_Component.h"
 #include "./PositionComponent.h"
+#include "./Missile_CurrentComponent.h"
 #include "./Sprite.h"
 #include "./Engine.h"
 #include "./Config.h"

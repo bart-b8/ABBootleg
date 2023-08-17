@@ -5,20 +5,18 @@
 
 #include "Point.h"
 #include "System.h"
+#include "./Engine.h"
+
+#define G 1
 
 class MissileSystem : public System {
-  public:
-    void Update();
+ public:
+  MissileSystem(Engine &engine): System(engine) {};
 
-    void LaunchMissile();
+  void Update();
 
-    void Elastic();
-
-    void MissileAbility();
-
-    void MissileRecord();
-
-    private:
+ private:
+  bool missile_OutOfBounds(const Point);
 
 };
 
