@@ -25,6 +25,7 @@ class TargetSystem : public System {
   bool IsIn(std::map<Entity *, int>, Entity*);
   void Update_collided_Missiles();
   void Update_hit_tgts();
+  void DropSupportedTargets(int, int, int);
 };
 
 #endif

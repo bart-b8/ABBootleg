@@ -7,7 +7,6 @@
 #include <sstream>
 #include <string>
 
-// TODO: Get rid of using namespace std;
 using namespace std;
 
 class Config {

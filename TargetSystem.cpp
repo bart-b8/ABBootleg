@@ -83,7 +83,7 @@ TargetSystem::TargetSystem(Engine &engine) : System(engine) {
     case 'S':
       sprite = Sprite::SPRT_STONE;
       tgttypecomp = new Target_StoneComponent;
-      hit =  Sprite::SPRT_STONE_HIT;
+      hit = Sprite::SPRT_STONE_HIT;
       break;
     }
 
@@ -104,7 +104,7 @@ TargetSystem::TargetSystem(Engine &engine) : System(engine) {
 }
 
 void TargetSystem::Update() {
-  // TODO(BD): check if any missiles are close to any targets.
+  // check if any missiles are close to any targets.
   std::set<Entity *> currmiss_set =
       engine_.GetEntityStream().WithTag(Component::Missile_Current);
   std::set<Entity *> tgt_set =
@@ -121,8 +121,6 @@ void TargetSystem::Update() {
 
       if ((pos_miss * pos_tgt) < 50) {
         // TODO(BD) hit detection improve
-        // missiles only hit once! check if missile allready in
-        // collided_missiles.
         AddToCollidedMissiles(currmiss);
         AddToHitTargets(tgt);
       }
@@ -132,11 +130,6 @@ void TargetSystem::Update() {
   // TODO(BD): if yes, hit detection
   // if yes, force perpendiculous to edge. Above certain treshold: second or
   // third target.
-  //
-  //
-  // TODO(BD): flash red when hit then remove:
-  // TODO(BD): Check if any targets are no longer supporter. they need to drop
-  // down.
   if (ak_->IsTimerEvent()) {
     Update_collided_Missiles();
     Update_hit_tgts();
@@ -163,9 +156,6 @@ bool TargetSystem::IsIn(std::map<Entity *, int> map, Entity *enty) {
 void TargetSystem::Update_collided_Missiles() {
   for (auto [enty, count] : collided_missiles) {
     count++;
-    /* if (count >= 1) {
-      // TODO(BD): switch around
-    } */
     if (count >= 1) {
       engine_.RemoveEntity(enty);
       collided_missiles.erase(enty);
@@ -177,15 +167,16 @@ void TargetSystem::Update_collided_Missiles() {
 void TargetSystem::Update_hit_tgts() {
   for (auto [enty, count] : hit_tgts) {
     hit_tgts[enty] = count + 1;
-    std::cout << "count is: " << count << "\t And comses to \t" << count/30%2 << endl;
+    std::cout << "count is: " << count << "\t And comses to \t"
+              << count / 30 % 2 << endl;
 
-    if (count/20%2 == 0) {
+    if (count / 20 % 2 == 0) {
       engine_.GetContext().screenchange = true;
       dynamic_cast<Sprite_Component *>(enty->GetComponent(Component::Sprite))
           ->sprite = dynamic_cast<Target_Component *>(
                          enty->GetComponent(Component::Target))
                          ->hit;
-    } else if (count/20%2 == 1) {
+    } else if (count / 20 % 2 == 1) {
       engine_.GetContext().screenchange = true;
       dynamic_cast<Sprite_Component *>(enty->GetComponent(Component::Sprite))
           ->sprite = dynamic_cast<Target_Component *>(
@@ -196,8 +187,34 @@ void TargetSystem::Update_hit_tgts() {
       engine_.GetContext().screenchange = true;
       engine_.RemoveEntity(enty);
       hit_tgts.erase(enty);
-      // TODO(BD): take targetCompoennt i , j and ii value and make sure to drop all targets on top.
+      // take targetCompoennt i , j and ii value and make sure to drop
+      // all targets on top.
+      int i = dynamic_cast<Target_Component *>(
+                  enty->GetComponent(Component::Target))
+                  ->i;
+      int j = dynamic_cast<Target_Component *>(
+                  enty->GetComponent(Component::Target))
+                  ->j;
+      int ii = dynamic_cast<Target_Component *>(
+                   enty->GetComponent(Component::Target))
+                   ->ii;
+      DropSupportedTargets(i, j, ii);
       delete enty;
+    }
+  }
+}
+
+void TargetSystem::DropSupportedTargets(int i, int j, int ii) {
+  std::set<Entity *> tgts =
+      engine_.GetEntityStream().WithTag(Component::Target);
+  for (Entity *tgt : tgts) {
+    Target_Component *tgtcomp =
+        dynamic_cast<Target_Component *>(tgt->GetComponent(Component::Target));
+    if (tgtcomp->i == i && tgtcomp->j < j) {
+      tgtcomp->j += 1;
+      PositionComponent *poscomp = dynamic_cast<PositionComponent *>(
+          tgt->GetComponent(Component::Position));
+      poscomp->pos = grid[tgtcomp->i + tgtcomp->j * 8];
     }
   }
 }

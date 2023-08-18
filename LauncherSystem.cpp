@@ -114,7 +114,7 @@ void LauncherSystem::Update() {
     dynamic_cast<PositionComponent *>(
         queue.front()->GetComponent(Component::Position))
         ->pos = missileRefPos + diff;
-    // TODO(BD): Change position of seat_points;
+    // Change position of seat_points;
     for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
       seat_poly_comps[i]->body_.back() = ref_seat_Points[i] + diff;
     }
