@@ -134,9 +134,9 @@ void LauncherSystem::Update() {
     ddp.Scale(-(double)1 / (double)I);
     dp = dp + ddp;
     p = p + dp;
-    /* dynamic_cast<PositionComponent *>(
+    dynamic_cast<PositionComponent *>(
         queue.front()->GetComponent(Component::Position))
-        ->pos = p; */
+        ->pos = p;
     for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
       Point offset;
       switch (i) {
