@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-#define TEST
+// #define TEST
 #ifdef TEST
 #include "./Context.h"
 #include "./Entity.h"
@@ -309,7 +309,7 @@ int test_TargetSystem() {
 
   delete tgtsys2;
 
-  engine.GetContext().pth_level = "./assets/levels/level_missing.txt";
+  engine.GetContext().pth_level = "./assets/test_levels/level_missing.txt";
   engine.GetContext().exit_game = 0;
 
   TargetSystem * tgtsys3 = new TargetSystem(engine);
@@ -322,7 +322,7 @@ int test_TargetSystem() {
 
   delete tgtsys3;
 
-  engine.GetContext().pth_level = "./assets/levels/level_wrongchar.txt";
+  engine.GetContext().pth_level = "./assets/test_levels/level_wrongchar.txt";
   engine.GetContext().exit_game = 0;
 
   TargetSystem * tgtsys4 = new TargetSystem(engine);

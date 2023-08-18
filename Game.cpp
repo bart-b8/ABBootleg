@@ -7,6 +7,7 @@
 #include "RenderSystem.h"
 #include "./PositionComponent.h"
 #include "./LauncherSystem.h"
+#include "./TargetSystem.h"
 
 // Deprecated. Should not be needed anymore after v0.1
 void Game::render_placeholder() const {
@@ -35,9 +36,11 @@ bool Game::Run() {
 
   LauncherSystem * launcher = new LauncherSystem(engine_);
   MissileSystem * missileSys = new MissileSystem(engine_);
+  TargetSystem * tgtSys = new TargetSystem(engine_);
   RenderSystem * renderer = new RenderSystem(engine_);
   engine_.AddSystem(launcher);
   engine_.AddSystem(missileSys);
+  engine_.AddSystem(tgtSys);
   engine_.AddSystem(renderer);
 
   ak_->StartTimer();
