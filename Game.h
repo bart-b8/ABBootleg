@@ -7,20 +7,23 @@
 
 class Game {
  public:
-    Game(Context &context) : context_(context),
-                             engine_(context) {
-        ak_ = &Allkit::Get();
-    }
+  Game(Context &context) : context_(context),
+    engine_(context) {
+    ak_ = &Allkit::Get();
+  }
 
-    ~Game() {}
+  ~Game() {}
 
-    bool Run();
+  bool Run();
 
  private:
-    Allkit *ak_ = NULL;
-    Context &context_;
-    Engine engine_;
-    void render_placeholder() const;
+  Allkit *ak_ = NULL;
+  Context &context_;
+  Engine engine_;
+  void render_placeholder() const;
+  void render_scorescreen();
+  void score();
+
 };
 
 #endif
