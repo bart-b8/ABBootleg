@@ -12,8 +12,7 @@ class Engine {
   std::vector<Entity*> vec_entitys;
   std::vector<System*> vec_systems;
   EntityStream* entityStream;
-  // We got Context by reference shouldn't this be: Context context_ used to be Context * ctx;
-  Context context_;
+  Context &context_;
 
  public:
   Engine(Context &context): context_(context) {
