@@ -81,18 +81,33 @@ bool Game::Run() {
 void Game::score() {
   // while (engine_.GetContext().highscores.size() <
   // Config::Get().Map()["highscores.max_highscores"]) {
+  constexpr auto max_size = std::numeric_limits<std::streamsize>::max();
   std::string highscores_dir = "./assets/highscores";
   for (const std::filesystem::directory_entry &highscore_dir :
        std::filesystem::directory_iterator(highscores_dir)) {
     std::fstream fs(highscore_dir.path(), std::fstream::in);
     if (!fs.is_open()) { break; }
-    char s[8];
-    fs.getline(s, 8);
-    int score;
-    while (strcmp(s,"[SCORE]") != 0) {
-      fs.getline(s,8);
-    }
-       fs >> score;
+    // int score = -1;
+    // // std::cout << s << endl;
+    char s;
+    in.seekg(-1,ios::end);
+    // char tag[8];
+    // fs >> s;
+    //
+    // while (true) {
+    //   if (s == '[') {
+    //     fs.getline(tag, 8, ']');
+    //   }
+    //   if (strcmp(tag, "SCORE]") == 0) {
+    //     fs >> score;
+    //     break;
+    //   }
+    //   if (fs.eof() || fs.bad()) {break;}
+    //   else if (fs.fail()) {
+    //     fs.clear();
+    //     fs.ignore(max_size, '[');
+    //   }
+    // }
 
   }
   // engine_.GetContext();
