@@ -32,5 +32,5 @@ void MissileSystem::Update() {
 }
 
 bool MissileSystem::missile_OutOfBounds(const Point p) {
-  return (p.y_ < -(90+35) || p.y_ > (360) || p.x_ < -35 || p.x_ > 1200);
+  return (p.y_ < -(90+35) || p.y_ > (360 + 400) || p.x_ < -35 || p.x_ > 1200);
 }
