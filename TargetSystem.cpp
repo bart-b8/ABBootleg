@@ -167,8 +167,8 @@ void TargetSystem::Update_collided_Missiles() {
 void TargetSystem::Update_hit_tgts() {
   for (auto [enty, count] : hit_tgts) {
     hit_tgts[enty] = count + 1;
-    std::cout << "count is: " << count << "\t And comses to \t"
-              << count / 30 % 2 << endl;
+    /* std::cout << "count is: " << count << "\t And comses to \t"
+              << count / 30 % 2 << endl; */
 
     if (count / 20 % 2 == 0) {
       engine_.GetContext().screenchange = true;

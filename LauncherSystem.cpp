@@ -134,12 +134,9 @@ void LauncherSystem::Update() {
     ddp.Scale(-(double)1 / (double)I);
     dp = dp + ddp;
     p = p + dp;
-    std::cout << "diff x: \t" << diff.x_ << "," << diff.y_ << "\tdpp: \t"
-              << ddp.x_ << "," << ddp.y_ << "\tdp: \t" << dp.x_ << "," << dp.y_
-              << "\tp: \t" << p.x_ << "," << p.y_ << endl;
-    dynamic_cast<PositionComponent *>(
+    /* dynamic_cast<PositionComponent *>(
         queue.front()->GetComponent(Component::Position))
-        ->pos = p;
+        ->pos = p; */
     for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
       Point offset;
       switch (i) {
