@@ -2,6 +2,7 @@
 #define TARGETSYSTEM_H
 
 #include <vector>
+#include <map>
 
 #include "Point.h"
 #include "System.h"
@@ -16,6 +17,14 @@ class TargetSystem : public System {
   void Update();
  private:
   std::vector<Point> grid;
+  std::map<Entity *, int> collided_missiles;
+  std::map<Entity *, int> hit_tgts;
+
+  void AddToCollidedMissiles(Entity *);
+  void AddToHitTargets(Entity *);
+  bool IsIn(std::map<Entity *, int>, Entity*);
+  void Update_collided_Missiles();
+  void Update_hit_tgts();
 };
 
 #endif

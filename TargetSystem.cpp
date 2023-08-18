@@ -1,11 +1,12 @@
 #include "TargetSystem.h"
 #include "./PositionComponent.h"
-#include "./Target_Component.h"
-#include "./Target_BoxComponent.h"
-#include "./Target_StoneComponent.h"
-#include "./Target_CircleComponent.h"
+#include "./Sprite.h"
 #include "./Sprite_Component.h"
-#include "./Sprite.h" 
+#include "./Target_BoxComponent.h"
+#include "./Target_CircleComponent.h"
+#include "./Target_Component.h"
+#include "./Target_StoneComponent.h"
+#include "Component.h"
 #include <fstream>
 
 TargetSystem::TargetSystem(Engine &engine) : System(engine) {
@@ -24,7 +25,9 @@ TargetSystem::TargetSystem(Engine &engine) : System(engine) {
   while (!fs.eof()) {
     char s;
     fs >> s;
-    if (fs.eof()) { break; }
+    if (fs.eof()) {
+      break;
+    }
     if (allowed.find(s) != std::string::npos) {
       targets.push_back(s);
       i++;
@@ -34,7 +37,8 @@ TargetSystem::TargetSystem(Engine &engine) : System(engine) {
   }
   fs.close();
 
-  if (i != (Config::Get().Map()["level.level_size"] * Config::Get().Map()["level.level_size"])) {
+  if (i != (Config::Get().Map()["level.level_size"] *
+            Config::Get().Map()["level.level_size"])) {
     corrupt = true;
   }
 
@@ -43,47 +47,53 @@ TargetSystem::TargetSystem(Engine &engine) : System(engine) {
     return;
   }
 
-
   // Create positions for grid
   Point base(585, 0);
   for (int ii = 0; ii < 64; ii++) {
-    int i = ii%8;
-    int j = ii/8;
-    Point offs(i*35, (8 - 1 - j) * 35);
+    int i = ii % 8;
+    int j = ii / 8;
+    Point offs(i * 35, (8 - 1 - j) * 35);
     Point out = base + offs;
     grid.push_back(out);
   }
 
-  // TODO(BD): generate target entities including positions and add to engine.
+  // generate target entities including positions and add to engine.
   for (long unsigned int i = 0; i < targets.size(); i++) {
-    PositionComponent * poscomp = new PositionComponent;
+    PositionComponent *poscomp = new PositionComponent;
     poscomp->pos = grid[i];
-    Target_Component * tgtcomp = new Target_Component;
-    tgtcomp->i = i%8;
-    tgtcomp->j = i/8;
+    Target_Component *tgtcomp = new Target_Component;
+    tgtcomp->i = i % 8;
+    tgtcomp->j = i / 8;
     tgtcomp->ii = i;
     char s = targets[i];
     Sprite sprite;
+    Sprite hit;
     Component *tgttypecomp;
     switch (s) {
-      case 'T':
-        sprite = Sprite::SPRT_TARGET;
-        tgttypecomp = new Target_CircleComponent;
-        break;
-      case 'B':
-        sprite = Sprite::SPRT_BOX;
-        tgttypecomp = new Target_BoxComponent;
-        break;
-      case 'S':
-        sprite = Sprite::SPRT_STONE;
-        tgttypecomp = new Target_StoneComponent;
-        break;
+    case 'T':
+      sprite = Sprite::SPRT_TARGET;
+      tgttypecomp = new Target_CircleComponent;
+      hit = Sprite::SPRT_TARGET_HIT;
+      break;
+    case 'B':
+      sprite = Sprite::SPRT_BOX;
+      tgttypecomp = new Target_BoxComponent;
+      hit = Sprite::SPRT_BOX_HIT;
+      break;
+    case 'S':
+      sprite = Sprite::SPRT_STONE;
+      tgttypecomp = new Target_StoneComponent;
+      hit =  Sprite::SPRT_STONE_HIT;
+      break;
     }
 
-    Sprite_Component * spritecomp = new Sprite_Component;
+    Sprite_Component *spritecomp = new Sprite_Component;
     spritecomp->sprite = sprite;
 
-    Entity * targetEntity = new Entity;
+    tgtcomp->normal = sprite;
+    tgtcomp->hit = hit;
+
+    Entity *targetEntity = new Entity;
     targetEntity->Add(poscomp);
     targetEntity->Add(tgtcomp);
     targetEntity->Add(tgttypecomp);
@@ -95,6 +105,29 @@ TargetSystem::TargetSystem(Engine &engine) : System(engine) {
 
 void TargetSystem::Update() {
   // TODO(BD): check if any missiles are close to any targets.
+  std::set<Entity *> currmiss_set =
+      engine_.GetEntityStream().WithTag(Component::Missile_Current);
+  std::set<Entity *> tgt_set =
+      engine_.GetEntityStream().WithTag(Component::Target);
+
+  for (Entity *currmiss : currmiss_set) {
+    Point pos_miss = dynamic_cast<PositionComponent *>(
+                         currmiss->GetComponent(Component::Position))
+                         ->pos;
+    for (Entity *tgt : tgt_set) {
+      Point pos_tgt = dynamic_cast<PositionComponent *>(
+                          tgt->GetComponent(Component::Position))
+                          ->pos;
+
+      if ((pos_miss * pos_tgt) < 50) {
+        // TODO(BD) hit detection improve
+        // missiles only hit once! check if missile allready in
+        // collided_missiles.
+        AddToCollidedMissiles(currmiss);
+        AddToHitTargets(tgt);
+      }
+    }
+  }
 
   // TODO(BD): if yes, hit detection
   // if yes, force perpendiculous to edge. Above certain treshold: second or
@@ -104,4 +137,67 @@ void TargetSystem::Update() {
   // TODO(BD): flash red when hit then remove:
   // TODO(BD): Check if any targets are no longer supporter. they need to drop
   // down.
+  if (ak_->IsTimerEvent()) {
+    Update_collided_Missiles();
+    Update_hit_tgts();
+  }
+}
+
+void TargetSystem::AddToCollidedMissiles(Entity *currmiss) {
+  if (IsIn(collided_missiles, currmiss)) {
+    return;
+  }
+  collided_missiles[currmiss] = 0;
+}
+void TargetSystem::AddToHitTargets(Entity *tgt) {
+  if (IsIn(hit_tgts, tgt)) {
+    return;
+  }
+  hit_tgts[tgt] = 0;
+}
+
+bool TargetSystem::IsIn(std::map<Entity *, int> map, Entity *enty) {
+  return (map.find(enty) != map.end());
+}
+
+void TargetSystem::Update_collided_Missiles() {
+  for (auto [enty, count] : collided_missiles) {
+    count++;
+    /* if (count >= 1) {
+      // TODO(BD): switch around
+    } */
+    if (count >= 1) {
+      engine_.RemoveEntity(enty);
+      collided_missiles.erase(enty);
+      delete enty;
+    }
+  }
+}
+
+void TargetSystem::Update_hit_tgts() {
+  for (auto [enty, count] : hit_tgts) {
+    hit_tgts[enty] = count + 1;
+    std::cout << "count is: " << count << "\t And comses to \t" << count/30%2 << endl;
+
+    if (count/20%2 == 0) {
+      engine_.GetContext().screenchange = true;
+      dynamic_cast<Sprite_Component *>(enty->GetComponent(Component::Sprite))
+          ->sprite = dynamic_cast<Target_Component *>(
+                         enty->GetComponent(Component::Target))
+                         ->hit;
+    } else if (count/20%2 == 1) {
+      engine_.GetContext().screenchange = true;
+      dynamic_cast<Sprite_Component *>(enty->GetComponent(Component::Sprite))
+          ->sprite = dynamic_cast<Target_Component *>(
+                         enty->GetComponent(Component::Target))
+                         ->normal;
+    }
+    if (count > 120) {
+      engine_.GetContext().screenchange = true;
+      engine_.RemoveEntity(enty);
+      hit_tgts.erase(enty);
+      // TODO(BD): take targetCompoennt i , j and ii value and make sure to drop all targets on top.
+      delete enty;
+    }
+  }
 }
