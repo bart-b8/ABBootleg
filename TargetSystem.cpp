@@ -29,8 +29,15 @@ TargetSystem::TargetSystem(Engine &engine) : System(engine) {
     return;
   }
 
-  // TODO(BD): create positions for grid
-  Point base;
+  // Create positions for grid
+  Point base(620, 0);
+  for (int ii = 0; ii < 64; ii++) {
+    int i = ii%8;
+    int j = ii/8;
+    Point offs(i*35, (8 - j) * 35);
+    Point out = base + offs;
+    grid.push_back(out);
+  }
 
   // TODO(BD): generate target entities including positions and add to engine.
 }
