@@ -3,17 +3,17 @@
 #include "./Missile_CurrentComponent.h"
 #include "./Missile_YellowComponent.h"
 #include "./PositionComponent.h"
+#include "./ScoreSystem.h"
 #include "./Sprite.h"
 #include "./Sprite_Component.h"
 #include "./TargetSystem.h"
 #include "HighScore.h"
 #include "MissileSystem.h"
 #include "RenderSystem.h"
-#include "./ScoreSystem.h"
 
-#include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <istream>
 #include <regex>
 #include <sstream>
@@ -72,7 +72,6 @@ bool Game::Run() {
     break;
   case -1:
   case -2:
-    // TODO(BD): show level file error page
     render_errorlevelfile();
     break;
   }
@@ -88,13 +87,16 @@ void Game::score() {
   std::string highscores_dir = "./assets/highscores";
   std::regex pattern_highscore_file("highscore_[1-9].txt");
   for (const std::filesystem::directory_entry &highscore_dir :
-  std::filesystem::directory_iterator(highscores_dir)) {
-    if (!std::regex_match(static_cast<std::string>(highscore_dir.path().filename()), pattern_highscore_file)) {
+       std::filesystem::directory_iterator(highscores_dir)) {
+    if (!std::regex_match(
+            static_cast<std::string>(highscore_dir.path().filename()),
+            pattern_highscore_file)) {
       break;
     }
     std::fstream highscore_istream(highscore_dir.path(), std::fstream::in);
     if (!highscore_istream.is_open()) {
-      std::cerr << "could not open " << highscore_dir.path().filename() << std::endl;
+      std::cerr << "could not open " << highscore_dir.path().filename()
+                << std::endl;
       return;
     }
 
@@ -109,23 +111,27 @@ void Game::score() {
           int score;
           std::istringstream iss(line);
           if (iss >> score) {
-            engine_.GetContext().highscores.push_back(HighScore(highscore_dir.path(), score));
+            engine_.GetContext().highscores.push_back(
+                HighScore(highscore_dir.path(), score));
           } else {
-            std::cerr << "Could not extract numberfrom line: " << "Linenumber " << lineNumber + 1 << std::endl;
+            std::cerr << "Could not extract numberfrom line: "
+                      << "Linenumber " << lineNumber + 1 << std::endl;
           }
         }
       }
-      if (highscore_istream.bad() || highscore_istream.eof()) { break; }
+      if (highscore_istream.bad() || highscore_istream.eof()) {
+        break;
+      }
     }
     highscore_istream.close();
     // engine_.GetContext();
     // render_scorescreen();
   }
 
-  // TODO(BD): Compare score current game to know highscores.
+  // Compare score current game to know highscores.
   // If know highscores < config get map 'highscores.max_highscores'
-  // then: add to highscores in correct position by renaming all files to get bumped and then store the highscore file.
-  // Update checksum.
+  // then: add to highscores in correct position by renaming all files to get
+  // bumped and then store the highscore file.
   int score = engine_.GetContext().elapsed_time;
   std::list<HighScore> highscores = engine_.GetContext().highscores;
   std::vector<HighScore> vector_highscores;
@@ -139,33 +145,42 @@ void Game::score() {
     }
     vector_highscores.push_back(a);
   }
-  if (new_highscore == -1 && highscores.size() < Config::Get().Map()["highscores.max_highscores"]) {
+  if (new_highscore == -1 &&
+      highscores.size() < Config::Get().Map()["highscores.max_highscores"]) {
     new_highscore = highscores.size() + 1;
   }
 
   if (new_highscore != -1) {
-    // Number of highscore files is equal to highscores.max_highscores then remove file
+    // Number of highscore files is equal to highscores.max_highscores then
+    // remove file
     if (highscores.size() == Config::Get().Map()["highscores.max_highscores"]) {
-      std::string file_to_remove = vector_highscores[highscores.size()-1].highscore_file_dir;
+      std::string file_to_remove =
+          vector_highscores[highscores.size() - 1].highscore_file_dir;
       std::filesystem::remove(file_to_remove);
       highscores.pop_back();
     }
     for (int i = highscores.size(); i >= new_highscore; --i) {
-      std::string old_name = highscores_dir + "/highscore_" + to_string(i) + ".txt";
-      std::string new_name =  highscores_dir + "/highscore_" + to_string(i + 1) + ".txt";
+      std::string old_name =
+          highscores_dir + "/highscore_" + to_string(i) + ".txt";
+      std::string new_name =
+          highscores_dir + "/highscore_" + to_string(i + 1) + ".txt";
       std::filesystem::rename(old_name, new_name);
     }
 
-
-    std::string new_highscoreFile = highscores_dir + "/highscore_" + to_string(new_highscore) + ".txt";
+    std::string new_highscoreFile =
+        highscores_dir + "/highscore_" + to_string(new_highscore) + ".txt";
     writeHighScoreFile(new_highscoreFile);
     render_scorescreen(new_highscore);
+
+    // TODO(BD): Update checksum.
   }
 }
 
 void Game::writeHighScoreFile(std::string file) {
   std::ofstream new_highscoreFileStream(file);
-  if (!new_highscoreFileStream.is_open()) { return; }
+  if (!new_highscoreFileStream.is_open()) {
+    return;
+  }
 
   new_highscoreFileStream << "[LEVEL]" << endl;
   new_highscoreFileStream << engine_.GetContext().pth_level << endl;
@@ -182,8 +197,8 @@ void Game::render_scorescreen(int highscore_place) {
                         Config::Get().Map()["game.background_height"], (float)0,
                         (float)0, Config::Get().Map()["game.screen_width"],
                         Config::Get().Map()["game.screen_height"]);
-  std::string text1 =
-      "Game Complete. With Score: " + to_string(engine_.GetContext().elapsed_time);
+  std::string text1 = "Game Complete. With Score: " +
+                      to_string(engine_.GetContext().elapsed_time);
   std::string text2 = "Press Enter||Space to go back.";
   Point pos1(Config::Get().Map()["game.screen_width"] / 2,
              Config::Get().Map()["game.screen_height"] - 150);
@@ -194,7 +209,7 @@ void Game::render_scorescreen(int highscore_place) {
   if (highscore_place != -1) {
     std::string text3 = "New Highscore. Place: " + to_string(highscore_place);
     Point pos3(Config::Get().Map()["game.screen_width"] / 2,
-             Config::Get().Map()["game.screen_height"] - 220);
+               Config::Get().Map()["game.screen_height"] - 220);
     ak_->DrawString(text3, pos3, color, ak_->ALIGN_CENTER, false);
   }
   ak_->DrawString(text1, pos1, color, ak_->ALIGN_CENTER, false);
@@ -202,10 +217,11 @@ void Game::render_scorescreen(int highscore_place) {
   ak_->DrawOnScreen(true);
 
   bool exit_ = false;
-  while(!exit_) {
+  while (!exit_) {
     ak_->NextEvent();
 
-    if (ak_->IsWindowClosed() || ak_->IsEnterKeyPushed() || ak_->IsSpaceBarPushed()) {
+    if (ak_->IsWindowClosed() || ak_->IsEnterKeyPushed() ||
+        ak_->IsSpaceBarPushed()) {
       exit_ = true;
     }
   }
@@ -218,8 +234,7 @@ void Game::render_errorlevelfile() {
                         Config::Get().Map()["game.background_height"], (float)0,
                         (float)0, Config::Get().Map()["game.screen_width"],
                         Config::Get().Map()["game.screen_height"]);
-  std::string text1 =
-      "Error with loading selected level file.";
+  std::string text1 = "Error with loading selected level file.";
   std::string text2 = "Press Enter||Space to go back.";
   Point pos1(Config::Get().Map()["game.screen_width"] / 2,
              Config::Get().Map()["game.screen_height"] - 150);
@@ -232,10 +247,11 @@ void Game::render_errorlevelfile() {
   ak_->DrawOnScreen(true);
 
   bool exit_ = false;
-  while(!exit_) {
+  while (!exit_) {
     ak_->NextEvent();
 
-    if (ak_->IsWindowClosed() || ak_->IsEnterKeyPushed() || ak_->IsSpaceBarPushed()) {
+    if (ak_->IsWindowClosed() || ak_->IsEnterKeyPushed() ||
+        ak_->IsSpaceBarPushed()) {
       exit_ = true;
     }
   }

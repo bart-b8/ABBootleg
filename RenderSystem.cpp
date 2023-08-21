@@ -29,7 +29,6 @@ void RenderSystem::DrawEntitys() {
                           sw, sh, dx, dy, dw, dh);
   }
 
-  // TODO(BD): Draw all string entities
   std::set<Entity *> wthTagPolygon =
       engine_.GetEntityStream().WithTag(Component::Polygon);
   for (Entity *entity : wthTagPolygon) {
