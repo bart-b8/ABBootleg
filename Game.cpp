@@ -8,6 +8,7 @@
 #include "./TargetSystem.h"
 #include "MissileSystem.h"
 #include "RenderSystem.h"
+#include "./ScoreSystem.h"
 
 #include <iostream>
 #include <filesystem>
@@ -43,10 +44,12 @@ bool Game::Run() {
   LauncherSystem *launcher = new LauncherSystem(engine_);
   MissileSystem *missileSys = new MissileSystem(engine_);
   TargetSystem *tgtSys = new TargetSystem(engine_);
+  ScoreSystem *scrSys = new ScoreSystem(engine_);
   RenderSystem *renderer = new RenderSystem(engine_);
   engine_.AddSystem(launcher);
   engine_.AddSystem(missileSys);
   engine_.AddSystem(tgtSys);
+  engine_.AddSystem(scrSys);
   engine_.AddSystem(renderer);
 
   ak_->StartTimer();

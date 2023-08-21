@@ -5,6 +5,7 @@
 #include "./Sprite_Component.h"
 #include "./Polygon_Component.h"
 #include "Component.h"
+#include "Text_Component.h"
 
 void RenderSystem::DrawEntitys() {
   std::set<Entity *> wthTagSprite =
@@ -36,6 +37,14 @@ void RenderSystem::DrawEntitys() {
         entity->GetComponent(Component::Polygon));
     std::vector<Point> polygon = polycomp->body_;
     ak_->DrawPoly(polygon);
+  }
+
+  std::set<Entity *> wthTagText = engine_.GetEntityStream().WithTag(Component::Text);
+  for (Entity *entity : wthTagText) {
+    Text_Component * txtComp = dynamic_cast<Text_Component *>(entity->GetComponent(Component::Text));
+    PositionComponent * posComp = dynamic_cast<PositionComponent *>(entity->GetComponent(Component::Position));
+    std::string text = txtComp->text + to_string(engine_.GetContext().elapsed_time);
+    ak_->DrawString(text, posComp->pos, txtComp->color, txtComp->align, txtComp->huge_font);
   }
 }
 

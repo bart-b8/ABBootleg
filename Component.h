@@ -16,6 +16,7 @@ class Component {
     Polygon,
     Sprite,
     Position,
+    Text,
   };
   enum Type {
     Yellow,
@@ -35,4 +36,6 @@ class Component {
   virtual ~Component() {}
 };
 
+// TODO(BD): ifndef in all .h files of components.
+//
 #endif
