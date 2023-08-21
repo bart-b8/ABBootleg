@@ -40,7 +40,6 @@ void Game::render_placeholder() const {
 }
 
 bool Game::Run() {
-  // TODO(BD) : Implement simple game.
   context_.exit_game = 0;
 
   LauncherSystem *launcher = new LauncherSystem(engine_);
@@ -69,13 +68,12 @@ bool Game::Run() {
 
   switch (context_.exit_game) {
   case 2:
-    // TODO(BD): Show score screen_width
     score();
-    // TODO(BD): store highscore file.
     break;
   case -1:
   case -2:
     // TODO(BD): show level file error page
+    render_errorlevelfile();
     break;
   }
 
@@ -199,6 +197,36 @@ void Game::render_scorescreen(int highscore_place) {
              Config::Get().Map()["game.screen_height"] - 220);
     ak_->DrawString(text3, pos3, color, ak_->ALIGN_CENTER, false);
   }
+  ak_->DrawString(text1, pos1, color, ak_->ALIGN_CENTER, false);
+  ak_->DrawString(text2, pos2, color, ak_->ALIGN_CENTER, false);
+  ak_->DrawOnScreen(true);
+
+  bool exit_ = false;
+  while(!exit_) {
+    ak_->NextEvent();
+
+    if (ak_->IsWindowClosed() || ak_->IsEnterKeyPushed() || ak_->IsSpaceBarPushed()) {
+      exit_ = true;
+    }
+  }
+}
+
+void Game::render_errorlevelfile() {
+  ak_->ClearScreen();
+  ak_->DrawScaledBitmap(SPRT_BACKGROUND, (float)0, (float)0,
+                        Config::Get().Map()["game.background_width"],
+                        Config::Get().Map()["game.background_height"], (float)0,
+                        (float)0, Config::Get().Map()["game.screen_width"],
+                        Config::Get().Map()["game.screen_height"]);
+  std::string text1 =
+      "Error with loading selected level file.";
+  std::string text2 = "Press Enter||Space to go back.";
+  Point pos1(Config::Get().Map()["game.screen_width"] / 2,
+             Config::Get().Map()["game.screen_height"] - 150);
+  Point pos2(Config::Get().Map()["game.screen_width"] / 2,
+             Config::Get().Map()["game.screen_height"] - 350);
+  Color color(0, 0, 0);
+
   ak_->DrawString(text1, pos1, color, ak_->ALIGN_CENTER, false);
   ak_->DrawString(text2, pos2, color, ak_->ALIGN_CENTER, false);
   ak_->DrawOnScreen(true);

@@ -25,6 +25,7 @@ class Game {
   Engine engine_;
   void render_placeholder() const;
   void render_scorescreen(int);
+  void render_errorlevelfile();
   void score();
   void writeHighScoreFile(std::string);
 
