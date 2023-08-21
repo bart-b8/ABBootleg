@@ -133,6 +133,12 @@ void TargetSystem::Update() {
   if (ak_->IsTimerEvent()) {
     Update_collided_Missiles();
     Update_hit_tgts();
+
+    // Test if there are still round targets if not: end game and show score
+    // screen.
+    if (engine_.GetEntityStream().WithTag(Component::Target_Circle).empty()) {
+      engine_.GetContext().exit_game = 2;
+    }
   }
 }
 
@@ -200,11 +206,6 @@ void TargetSystem::Update_hit_tgts() {
                    ->ii;
       DropSupportedTargets(i, j, ii);
       delete enty;
-
-      // Test if there are still round targets if not: end game and show score screen.
-      if (engine_.GetEntityStream().WithTag(Component::Target_Circle).empty()) {
-        engine_.GetContext().exit_game = 2;
-      }
     }
   }
 }
