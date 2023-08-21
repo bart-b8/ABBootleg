@@ -41,7 +41,7 @@ class Config {
     std::string tag;
     while (!fs.eof()) {
       std::string line;
-      // TODO(BD): improve stability and foolproofness by using getline() and
+      // todo(option)(BD): improve stability and foolproofness by using getline() and
       // remove spaces (if there would be spaces in the wrong place in the ini
       // file, it would break)
       fs >> line;
