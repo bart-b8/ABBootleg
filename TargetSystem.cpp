@@ -206,9 +206,6 @@ void TargetSystem::Update_hit_tgts() {
                    ->ii;
       DropSupportedTargets(i, j, ii);
       delete enty;
-
-      // TODO(BD): remove. This is only for testing purposuos.
-      engine_.GetContext().exit_game = 2;
     }
   }
 }

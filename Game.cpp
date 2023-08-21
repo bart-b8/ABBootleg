@@ -111,13 +111,13 @@ void Game::score() {
           int score;
           std::istringstream iss(line);
           if (iss >> score) {
-            std::cout << "Score is: " << score << std::endl;
+            engine_.GetContext().highscores.push_back(score);
           } else {
             std::cerr << "Could not extract numberfrom line: " << "Linenumber " << lineNumber + 1 << std::endl;
           }
-          engine_.GetContext().highscores.push_back(score);
         }
       }
+      if (highscore_istream.bad() || highscore_istream.eof()) { break; }
     }
     highscore_istream.close();
     // engine_.GetContext();
