@@ -106,6 +106,7 @@ void LauncherSystem::Update() {
     missileRefPos = dynamic_cast<PositionComponent *>(
                         queue.front()->GetComponent(Component::Position))
                         ->pos;
+    ak_->LoadLaunchSound();
   }
   if (ref && ak_->HasMouseMoved()) {
     Point mouseCur = convert_to_Classic_Coordinate_System(ak_->GetMouse());
@@ -125,6 +126,7 @@ void LauncherSystem::Update() {
     releasing = true;
   }
   if (releasing) {
+    ak_->PlayLaunchSound();
     engine_.GetContext().screenchange = true;
     Point p = dynamic_cast<PositionComponent *>(
                   queue.front()->GetComponent(Component::Position))
