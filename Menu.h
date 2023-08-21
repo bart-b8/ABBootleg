@@ -3,6 +3,7 @@
 #define MENU_H
 
 #include "Allkit.h"
+#include "./Context.h"
 #include <vector>
 #include <filesystem>
 
@@ -55,7 +56,7 @@ class Level_Menu_item : public Menu_item {
 
 class Menu {
  public:
-  Menu() : ak_(&Allkit::Get()) {}
+  Menu();
   ~Menu();
 
   // Start the menu loop
@@ -83,7 +84,13 @@ class Menu {
 
   void destruct_menu_items();
 
+  void UpdateHighScores();
+
+  void ShowHighScoreInfo(std::filesystem::path, int);
+
   std::vector<Menu_item *> menu_items;
+
+  Context context_;
 
  protected:
   bool exit_ = false;

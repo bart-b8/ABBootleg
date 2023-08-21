@@ -83,55 +83,12 @@ void Game::score() {
   // while (engine_.GetContext().highscores.size() <
   // Config::Get().Map()["highscores.max_highscores"]) {
   //
-  // Collect saved scores.
-  std::string highscores_dir = "./assets/highscores";
-  std::regex pattern_highscore_file("highscore_[1-9].txt");
-  for (const std::filesystem::directory_entry &highscore_dir :
-       std::filesystem::directory_iterator(highscores_dir)) {
-    if (!std::regex_match(
-            static_cast<std::string>(highscore_dir.path().filename()),
-            pattern_highscore_file)) {
-      break;
-    }
-    std::fstream highscore_istream(highscore_dir.path(), std::fstream::in);
-    if (!highscore_istream.is_open()) {
-      std::cerr << "could not open " << highscore_dir.path().filename()
-                << std::endl;
-      return;
-    }
-
-    std::string search = "[SCORE]";
-    std::string line;
-    int lineNumber = 0;
-
-    while (std::getline(highscore_istream, line)) {
-      lineNumber++;
-      if (line.find(search) != std::string::npos) {
-        if (std::getline(highscore_istream, line)) {
-          int score;
-          std::istringstream iss(line);
-          if (iss >> score) {
-            engine_.GetContext().highscores.push_back(
-                HighScore(highscore_dir.path(), score));
-          } else {
-            std::cerr << "Could not extract numberfrom line: "
-                      << "Linenumber " << lineNumber + 1 << std::endl;
-          }
-        }
-      }
-      if (highscore_istream.bad() || highscore_istream.eof()) {
-        break;
-      }
-    }
-    highscore_istream.close();
-    // engine_.GetContext();
-    // render_scorescreen();
-  }
 
   // Compare score current game to know highscores.
   // If know highscores < config get map 'highscores.max_highscores'
   // then: add to highscores in correct position by renaming all files to get
   // bumped and then store the highscore file.
+  std::string highscores_dir =  "./assets/highscores";
   int score = engine_.GetContext().elapsed_time;
   std::list<HighScore> highscores = engine_.GetContext().highscores;
   std::vector<HighScore> vector_highscores;
