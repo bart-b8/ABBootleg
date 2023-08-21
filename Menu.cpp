@@ -250,26 +250,35 @@ void Menu::UpdateHighScores() {
     }
     std::fstream highscore_istream(highscore_dir.path(), std::fstream::in);
     if (!highscore_istream.is_open()) {
-      std::cerr << "could not open " << highscore_dir.path().filename()
+      std::cout << "could not open " << highscore_dir.path().filename()
                 << std::endl;
       return;
     }
 
-    std::string search = "[SCORE]";
+    std::string search1 = "[LEVEL]";
+    std::string search2 = "[SCORE]";
     std::string line;
     int lineNumber = 0;
+    int score = -1;
+
+    std::string level_file_dir;
 
     while (std::getline(highscore_istream, line)) {
       lineNumber++;
-      if (line.find(search) != std::string::npos) {
+      if (line.find(search1) != std::string::npos) {
         if (std::getline(highscore_istream, line)) {
-          int score;
           std::istringstream iss(line);
-          if (iss >> score) {
-            context_.highscores.push_back(
-                HighScore(highscore_dir.path(), score));
-          } else {
-            std::cerr << "Could not extract numberfrom line: "
+          if (!(iss >> level_file_dir)) {
+            std::cout << "could not extract level file directory." << endl;
+          }
+        }
+      }
+
+      if (line.find(search2) != std::string::npos) {
+        if (std::getline(highscore_istream, line)) {
+          std::istringstream iss(line);
+          if (!(iss >> score)) {
+            std::cout << "Could not extract numberfrom line: "
                       << "Linenumber " << lineNumber + 1 << std::endl;
           }
         }
@@ -279,6 +288,8 @@ void Menu::UpdateHighScores() {
       }
     }
     highscore_istream.close();
+    context_.highscores.push_back(
+      HighScore(highscore_dir.path(), score, level_file_dir));
   }
   context_.highscores.sort();
 }
