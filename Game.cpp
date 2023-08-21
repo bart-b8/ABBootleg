@@ -81,35 +81,36 @@ bool Game::Run() {
 void Game::score() {
   // while (engine_.GetContext().highscores.size() <
   // Config::Get().Map()["highscores.max_highscores"]) {
-  constexpr auto max_size = std::numeric_limits<std::streamsize>::max();
   std::string highscores_dir = "./assets/highscores";
   for (const std::filesystem::directory_entry &highscore_dir :
        std::filesystem::directory_iterator(highscores_dir)) {
     std::fstream fs(highscore_dir.path(), std::fstream::in);
     if (!fs.is_open()) { break; }
-    // int score = -1;
-    // // std::cout << s << endl;
-    char s;
-    in.seekg(-1,ios::end);
-    // char tag[8];
-    // fs >> s;
-    //
-    // while (true) {
-    //   if (s == '[') {
-    //     fs.getline(tag, 8, ']');
-    //   }
-    //   if (strcmp(tag, "SCORE]") == 0) {
-    //     fs >> score;
-    //     break;
-    //   }
-    //   if (fs.eof() || fs.bad()) {break;}
-    //   else if (fs.fail()) {
-    //     fs.clear();
-    //     fs.ignore(max_size, '[');
-    //   }
-    // }
-
+  if (!highscore_istream.is_open()) {
+    std::cerr << "could not open highscore_1" <<std::endl;
+    return;
   }
+
+  std::string search = "[SCORE]";
+  std::string line;
+  int lineNumber = 0;
+
+  while (std::getline(highscore_istream, line)) {
+    lineNumber++;
+    if (line.find(search) != std::string::npos) {
+      std::cout << "Found at line " << lineNumber << ": " << line << std::endl;
+      if (std::getline(highscore_istream, line)) {
+        int score;
+        std::istringstream iss(line);
+        if (iss >> score) {
+          std::cout << "Score is: " << score << std::endl;
+        } else {
+          std::cerr << "Could not extract numberfrom line: " << "Linenumber " << lineNumber + 1 << std::endl;
+        }
+      }
+    }
+  }
+  highscore_istream.close();
   // engine_.GetContext();
   // render_scorescreen();
 }
