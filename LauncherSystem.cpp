@@ -11,9 +11,11 @@
 #include "TargetSystem.h"
 #include <vector>
 
+// Inertia for the launcher
 #define I 10
 
 LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
+  // Create Catapult with springs
   Entity *cat = new Entity;
   Sprite_Component *cat_sprite = new Sprite_Component;
   PositionComponent *loc = new PositionComponent;
@@ -227,6 +229,7 @@ void LauncherSystem::CreateQueue() {
   }
 }
 
+// Used after missile is shot. to replentish queue
 void LauncherSystem::AddToQueue() {
   queue.pop_front();
   int i = 0;
@@ -239,8 +242,6 @@ void LauncherSystem::AddToQueue() {
   engine_.AddEntity(missile);
   queue.push_back(missile);
 }
-
-void LauncherSystem::MouseLocation() {}
 
 bool LauncherSystem::MouseOnMissile() {
   Point mousePoint = convert_to_Classic_Coordinate_System(ak_->GetMouse());

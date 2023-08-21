@@ -34,8 +34,6 @@ class LauncherSystem : public System {
 
   void AddToQueue();
 
-  void MouseLocation();
-
   bool MouseOnMissile();
 
  private:

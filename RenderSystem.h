@@ -14,8 +14,6 @@ class RenderSystem : public System {
   void Update();
 
   void DrawEntitys();
-
-  void DrawScores();
 };
 
 #endif

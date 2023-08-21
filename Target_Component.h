@@ -1,3 +1,6 @@
+#ifndef TARGET_COMPONENT
+#define TARGET_COMPONENT
+
 #include "Component.h"
 #include "./Sprite.h"
 
@@ -12,3 +15,4 @@ class Target_Component : public Component {
   Tag GetTag() override { return Tag::Target; }
   virtual ~Target_Component() {}
 };
+#endif // !TARGET_COMPONENT

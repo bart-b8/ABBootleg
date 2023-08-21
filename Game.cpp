@@ -19,7 +19,7 @@
 #include <sstream>
 
 // Deprecated. Should not be needed anymore after v0.1
-void Game::render_placeholder() const {
+/* void Game::render_placeholder() const {
   ak_->ClearScreen();
   ak_->DrawScaledBitmap(SPRT_BACKGROUND, (float)0, (float)0,
                         Config::Get().Map()["game.background_width"],
@@ -37,7 +37,7 @@ void Game::render_placeholder() const {
   ak_->DrawString(text1, pos1, color, ak_->ALIGN_CENTER, false);
   ak_->DrawString(text2, pos2, color, ak_->ALIGN_CENTER, false);
   ak_->DrawOnScreen(true);
-}
+} */
 
 bool Game::Run() {
   context_.exit_game = 0;
@@ -80,9 +80,6 @@ bool Game::Run() {
 }
 
 void Game::score() {
-  // while (engine_.GetContext().highscores.size() <
-  // Config::Get().Map()["highscores.max_highscores"]) {
-  //
 
   // Compare score current game to know highscores.
   // If know highscores < config get map 'highscores.max_highscores'
@@ -95,6 +92,8 @@ void Game::score() {
   int new_highscore = -1;
   highscores.sort();
   int i = 0;
+
+  // Check if last game beats any highscores
   for (HighScore a : highscores) {
     i++;
     if (score < a.score && new_highscore == -1) {
@@ -116,6 +115,8 @@ void Game::score() {
       std::filesystem::remove(file_to_remove);
       highscores.pop_back();
     }
+
+    // rename all file names of the highscores that are bumped
     for (int i = highscores.size(); i >= new_highscore; --i) {
       std::string old_name =
           highscores_dir + "/highscore_" + to_string(i) + ".txt";

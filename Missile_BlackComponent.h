@@ -1,3 +1,5 @@
+#ifndef MISSILE_BLACKCOMP
+#define MISSILE_BLACKCOMP
 
 #include "Component.h"
 
@@ -8,3 +10,4 @@ class Missile_BlackComponent : public Component {
 
   Type GetType() override{ return Type::Black; }
 };
+#endif // !MISSILE_BLACKCOMP

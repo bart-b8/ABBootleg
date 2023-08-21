@@ -8,6 +8,7 @@
 #include "Text_Component.h"
 
 void RenderSystem::DrawEntitys() {
+  // Draw all entities with sprites
   std::set<Entity *> wthTagSprite =
       engine_.GetEntityStream().WithTag(Component::Sprite);
   std::map<std::string, double> cfg = Config::Get().Map();
@@ -29,6 +30,7 @@ void RenderSystem::DrawEntitys() {
                           sw, sh, dx, dy, dw, dh);
   }
 
+  // Draw all entities with polygons
   std::set<Entity *> wthTagPolygon =
       engine_.GetEntityStream().WithTag(Component::Polygon);
   for (Entity *entity : wthTagPolygon) {
@@ -38,6 +40,7 @@ void RenderSystem::DrawEntitys() {
     ak_->DrawPoly(polygon);
   }
 
+  // Draw all entities with text.
   std::set<Entity *> wthTagText = engine_.GetEntityStream().WithTag(Component::Text);
   for (Entity *entity : wthTagText) {
     Text_Component * txtComp = dynamic_cast<Text_Component *>(entity->GetComponent(Component::Text));
@@ -46,8 +49,6 @@ void RenderSystem::DrawEntitys() {
     ak_->DrawString(text, posComp->pos, txtComp->color, txtComp->align, txtComp->huge_font);
   }
 }
-
-void RenderSystem::DrawScores() {}
 
 void RenderSystem::Update() {
   if (!engine_.GetContext().screenchange) {
@@ -61,7 +62,6 @@ void RenderSystem::Update() {
       static_cast<float>(0), Config::Get().Map()["game.screen_width"],
       Config::Get().Map()["game.screen_height"]);
   DrawEntitys();
-  DrawScores();
   engine_.GetContext().screenchange = false;
   ak_->DrawOnScreen(true);
 }

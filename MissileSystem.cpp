@@ -3,12 +3,15 @@
 #include "PositionComponent.h"
 
 void MissileSystem::Update() {
+  // collect all entities with current missile tag.
   std::set<Entity *> entities_Current =
       engine_.GetEntityStream().WithTag(Component::Missile_Current);
+  // if non in engine. Missile system has no work
   if (entities_Current.empty()) {
     return;
   }
 
+  // to improve stability of speed. Kinematics should only update after IsTimerEvent
   if (!(ak_->IsTimerEvent())) { return; }
 
   for (Entity *entity : entities_Current) {
