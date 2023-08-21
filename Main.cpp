@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-// #define TEST
+#define TEST
 #ifdef TEST
 #include "./Context.h"
 #include "./Entity.h"
@@ -14,6 +14,7 @@
 #include "./Point.h"
 #include "./Target_Component.h"
 #include "./TargetSystem.h"
+#include "./Game.h"
 
 int test_Config_Set() {
   int count = 0;
@@ -343,6 +344,24 @@ int test_TargetSystem() {
   }
   return count;
 }
+
+int test_scorescreen() {
+  std::cout << "TESTs for ScoreScreen." << endl;
+  int count = 0;
+
+  Context context;
+  Game game(context);
+
+  game.score();
+
+  std::cout << "Total result for ScoreScreen tests: " << count << " Fails" << endl;
+  if (!count) {
+    std::cout << "Scorescreen Tests SUCCES" << endl;
+  } else {
+    std::cout << "Scorescreen Test FAILURE" << endl;
+  }
+  return count;
+}
 #endif  // TEST
 
 void InitWsl() {
@@ -411,6 +430,8 @@ int main(int argc, char **argv) {
   count += test_Engine();
   std::cout << endl << endl;
   count += test_TargetSystem();
+  std::cout << endl << endl;
+  count += test_scorescreen();
   std::cout << endl << endl;
 
   std::cout << "Total FAILED: " << count << endl;

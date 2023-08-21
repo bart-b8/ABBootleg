@@ -16,6 +16,8 @@ class Game {
 
   bool Run();
 
+  friend int test_scorescreen();
+
  private:
   Allkit *ak_ = NULL;
   Context &context_;
