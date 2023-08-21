@@ -4,6 +4,7 @@
 #include "Allkit.h"
 #include "Context.h"
 #include "Engine.h"
+#include <string>
 
 class Game {
  public:
@@ -23,8 +24,9 @@ class Game {
   Context &context_;
   Engine engine_;
   void render_placeholder() const;
-  void render_scorescreen();
+  void render_scorescreen(int);
   void score();
+  void writeHighScoreFile(std::string);
 
 };
 

@@ -3,7 +3,9 @@
 
 #include <chrono>
 #include <filesystem>
-#include <vector>
+#include <list>
+
+#include "./HighScore.h"
 
 class Context {
  public:
@@ -11,7 +13,7 @@ class Context {
   bool screenchange = true;
   int exit_game = 0;
   int highscore_achieved = 0;
-  std::vector<int> highscores;
+  std::list<HighScore> highscores;
   std::chrono::system_clock::time_point starttime;
   int elapsed_time;
 };

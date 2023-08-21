@@ -6,6 +6,7 @@
 #include "./Sprite.h"
 #include "./Sprite_Component.h"
 #include "./TargetSystem.h"
+#include "HighScore.h"
 #include "MissileSystem.h"
 #include "RenderSystem.h"
 #include "./ScoreSystem.h"
@@ -70,7 +71,6 @@ bool Game::Run() {
   case 2:
     // TODO(BD): Show score screen_width
     score();
-    render_scorescreen();
     // TODO(BD): store highscore file.
     break;
   case -1:
@@ -111,7 +111,7 @@ void Game::score() {
           int score;
           std::istringstream iss(line);
           if (iss >> score) {
-            engine_.GetContext().highscores.push_back(score);
+            engine_.GetContext().highscores.push_back(HighScore(highscore_dir.path(), score));
           } else {
             std::cerr << "Could not extract numberfrom line: " << "Linenumber " << lineNumber + 1 << std::endl;
           }
@@ -128,9 +128,56 @@ void Game::score() {
   // If know highscores < config get map 'highscores.max_highscores'
   // then: add to highscores in correct position by renaming all files to get bumped and then store the highscore file.
   // Update checksum.
+  int score = engine_.GetContext().elapsed_time;
+  std::list<HighScore> highscores = engine_.GetContext().highscores;
+  std::vector<HighScore> vector_highscores;
+  int new_highscore = -1;
+  highscores.sort();
+  int i = 0;
+  for (HighScore a : highscores) {
+    i++;
+    if (score < a.score && new_highscore == -1) {
+      new_highscore = i;
+    }
+    vector_highscores.push_back(a);
+  }
+  if (new_highscore == -1 && highscores.size() < Config::Get().Map()["highscores.max_highscores"]) {
+    new_highscore = highscores.size() + 1;
+  }
+
+  if (new_highscore != -1) {
+    // Number of highscore files is equal to highscores.max_highscores then remove file
+    if (highscores.size() == Config::Get().Map()["highscores.max_highscores"]) {
+      std::string file_to_remove = vector_highscores[highscores.size()-1].highscore_file_dir;
+      std::filesystem::remove(file_to_remove);
+      highscores.pop_back();
+    }
+    for (int i = highscores.size(); i >= new_highscore; --i) {
+      std::string old_name = highscores_dir + "/highscore_" + to_string(i) + ".txt";
+      std::string new_name =  highscores_dir + "/highscore_" + to_string(i + 1) + ".txt";
+      std::filesystem::rename(old_name, new_name);
+    }
+
+
+    std::string new_highscoreFile = highscores_dir + "/highscore_" + to_string(new_highscore) + ".txt";
+    writeHighScoreFile(new_highscoreFile);
+    render_scorescreen(new_highscore);
+  }
 }
 
-void Game::render_scorescreen() {
+void Game::writeHighScoreFile(std::string file) {
+  std::ofstream new_highscoreFileStream(file);
+  if (!new_highscoreFileStream.is_open()) { return; }
+
+  new_highscoreFileStream << "[LEVEL]" << endl;
+  new_highscoreFileStream << engine_.GetContext().pth_level << endl;
+  new_highscoreFileStream << "[SCORE]" << endl;
+  new_highscoreFileStream << engine_.GetContext().elapsed_time;
+
+  new_highscoreFileStream.close();
+}
+
+void Game::render_scorescreen(int highscore_place) {
   ak_->ClearScreen();
   ak_->DrawScaledBitmap(SPRT_BACKGROUND, (float)0, (float)0,
                         Config::Get().Map()["game.background_width"],
@@ -138,14 +185,30 @@ void Game::render_scorescreen() {
                         (float)0, Config::Get().Map()["game.screen_width"],
                         Config::Get().Map()["game.screen_height"]);
   std::string text1 =
-      "Game Complete. With Score: " + (std::string)context_.pth_level.stem();
+      "Game Complete. With Score: " + to_string(engine_.GetContext().elapsed_time);
   std::string text2 = "Press Enter||Space to go back.";
   Point pos1(Config::Get().Map()["game.screen_width"] / 2,
-             Config::Get().Map()["game.screen_height"] - 180);
+             Config::Get().Map()["game.screen_height"] - 150);
   Point pos2(Config::Get().Map()["game.screen_width"] / 2,
-             Config::Get().Map()["game.screen_height"] - 250);
+             Config::Get().Map()["game.screen_height"] - 350);
   Color color(0, 0, 0);
+
+  if (highscore_place != -1) {
+    std::string text3 = "New Highscore. Place: " + to_string(highscore_place);
+    Point pos3(Config::Get().Map()["game.screen_width"] / 2,
+             Config::Get().Map()["game.screen_height"] - 220);
+    ak_->DrawString(text3, pos3, color, ak_->ALIGN_CENTER, false);
+  }
   ak_->DrawString(text1, pos1, color, ak_->ALIGN_CENTER, false);
   ak_->DrawString(text2, pos2, color, ak_->ALIGN_CENTER, false);
   ak_->DrawOnScreen(true);
+
+  bool exit_ = false;
+  while(!exit_) {
+    ak_->NextEvent();
+
+    if (ak_->IsWindowClosed() || ak_->IsEnterKeyPushed() || ak_->IsSpaceBarPushed()) {
+      exit_ = true;
+    }
+  }
 }
