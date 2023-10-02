@@ -106,29 +106,37 @@ void LauncherSystem::Update() {
     // Record reference mousePoint
     ref = true;
     mouseRef = convert_to_Classic_Coordinate_System(ak_->GetMouse());
+
     // Record reference position of missile loaded
     missileRefPos = dynamic_cast<PositionComponent *>(
                         queue.front()->GetComponent(Component::Position))
                         ->pos;
     ak_->LoadLaunchSound();
   }
+
   if (ref && ak_->HasMouseMoved()) {
     Point mouseCur = convert_to_Classic_Coordinate_System(ak_->GetMouse());
     Point diff = mouseCur - mouseRef;
+
     // Change position of missile loaded to missileRefPos + diff
     dynamic_cast<PositionComponent *>(
         queue.front()->GetComponent(Component::Position))
         ->pos = missileRefPos + diff;
+
     // Change position of seat_points;
     for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
       seat_poly_comps[i]->body_.back() = ref_seat_Points[i] + diff;
     }
+
     engine_.GetContext().screenchange = true;
+
   }
+
   if (ref && ak_->IsMouseReleased()) {
     ref = false;
     releasing = true;
   }
+
   if (releasing) {
     ak_->PlayLaunchSound();
     engine_.GetContext().screenchange = true;
@@ -143,6 +151,7 @@ void LauncherSystem::Update() {
     dynamic_cast<PositionComponent *>(
         queue.front()->GetComponent(Component::Position))
         ->pos = p;
+
     for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
       Point offset;
       switch (i) {
@@ -155,9 +164,10 @@ void LauncherSystem::Update() {
           offset = Point(17.5, 0);
           break;
       }
+
       seat_poly_comps[i]->body_.back() = p + offset;
     }
-    
+
     if (abs(dp.x_) > abs(diff.x_)) {
       releasing = false;
       released = true;
