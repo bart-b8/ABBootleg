@@ -175,6 +175,12 @@ void LauncherSystem::Update() {
   }
   if (released) {
     released = false;
+
+    // Change position of seat_points back to rest;
+    for (long unsigned int i = 0; i < seat_poly_comps.size(); i++) {
+      seat_poly_comps[i]->body_.back() = ref_seat_Points[i];
+    }
+
     Missile_CurrentComponent * miscurComp = new Missile_CurrentComponent;
     engine_.RemoveEntity(queue.front());
     miscurComp->vel = dp;
