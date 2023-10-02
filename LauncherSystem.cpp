@@ -15,10 +15,11 @@
 #define I 10
 
 LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
-  // Create Catapult with springs
+  // Create Catapult with springs and add to engine
   Entity *cat = new Entity;
   Sprite_Component *cat_sprite = new Sprite_Component;
   PositionComponent *loc = new PositionComponent;
+
   cat_sprite->sprite = SPRT_LAUNCHER;
   cat_sprite->dst_width = Config::Get().Map()["launcher.dst_width"];
   cat_sprite->dst_height = Config::Get().Map()["launcher.dst_height"];
@@ -27,6 +28,7 @@ LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
   loc->pos.x_ = (Config::Get().Map()["missiles.missiles"] - 2) *
                 (Config::Get().Map()["missiles.dst_width"] + 5);
   loc->pos.y_ = 0;
+
   cat->Add(cat_sprite);
   cat->Add(loc);
   engine_.AddEntity(cat);
