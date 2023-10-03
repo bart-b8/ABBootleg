@@ -27,7 +27,8 @@ git clone https://github.com/bart-b8/ABBootleg.git
 Open Project.code-workspace in VS Code:
 
 ```bash
+cd ABBootleg
 code Project.code-workspace
 ```
 
-The task _*Run (+build)*_ will compile and run the game.
+The task _**Run (+build)**_ will compile and run the game.
