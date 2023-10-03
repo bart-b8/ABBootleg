@@ -56,6 +56,7 @@ class Allkit {
     bool IsMouseReleased();
     bool HasMouseMoved();
     Point &GetMouse();
+    Point &GetMouseSkipQueue();
 
     bool IsScreenActive();
     bool IsTimerEvent();

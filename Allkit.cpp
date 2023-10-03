@@ -1,4 +1,6 @@
 #include "Allkit.h"
+#include <allegro5/events.h>
+#include <allegro5/mouse.h>
 
 void Allkit::Init() {
     // Init Allegro
@@ -292,6 +294,27 @@ Point &Allkit::GetMouse() {
     mouse.x_ = event.mouse.x;
     mouse.y_ = event.mouse.y;
     return mouse;
+}
+
+// Alternative GetMouse for smooter operation of launcher
+// The mouse event source adds more events to the queue than
+// the fps of the game. This causes the Engine to catch up at
+// 60 fps of a much faster event source.
+// The alternative GetMouse routine drops all consecutive mouse axis events and
+// takes the current state of the mouse instead of the state recorded in
+// the events.
+Point &Allkit::GetMouseSkipQueue() {
+  ALLEGRO_MOUSE_STATE state;
+
+  while (al_peek_next_event(event_queue, &event) && event.type == ALLEGRO_EVENT_MOUSE_AXES) {
+    al_drop_next_event(event_queue);
+  }
+
+  al_get_mouse_state(&state);
+
+  mouse.x_ = state.x;
+  mouse.y_ = state.y;
+  return mouse;
 }
 
 ////////////////////////////////////
