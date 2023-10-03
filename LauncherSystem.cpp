@@ -119,7 +119,7 @@ void LauncherSystem::Update() {
   }
 
   if (ref && ak_->HasMouseMoved()) {
-    Point mouseCur = convert_to_Classic_Coordinate_System(ak_->GetMouseSkipQueue());
+    Point mouseCur = convert_to_Classic_Coordinate_System(ak_->GetMouse());
     Point diff = mouseCur - mouseRef;
 
     // Change position of missile loaded to missileRefPos + diff

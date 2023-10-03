@@ -291,6 +291,12 @@ bool Allkit::HasMouseMoved() {
 }
 
 Point &Allkit::GetMouse() {
+  ALLEGRO_EVENT event_next;
+
+  while(al_peek_next_event(event_queue, &event_next) && event_next.type == ALLEGRO_EVENT_MOUSE_AXES) {
+    event = event_next;
+    al_drop_next_event(event_queue);
+  }
     mouse.x_ = event.mouse.x;
     mouse.y_ = event.mouse.y;
     return mouse;
