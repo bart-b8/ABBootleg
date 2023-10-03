@@ -97,21 +97,25 @@ LauncherSystem::LauncherSystem(Engine &engine) : System(engine) {
 void LauncherSystem::Update() {
   static Point mouseRef;
   static Point missileRefPos;
+  static bool lmbdown = false;
   static bool ref = false;
   static bool releasing = false;
   bool released = false;
   static Point dp;
 
-  if (ak_->IsMouseClicked() && MouseOnMissile()) {
-    // Record reference mousePoint
-    ref = true;
-    mouseRef = convert_to_Classic_Coordinate_System(ak_->GetMouse());
+  if (lmbdown == false && ak_->IsMouseClicked()) {
+    lmbdown = true;
+    if (MouseOnMissile()) {
+      // Record reference mousePoint
+      ref = true;
+      mouseRef = convert_to_Classic_Coordinate_System(ak_->GetMouse());
 
-    // Record reference position of missile loaded
-    missileRefPos = dynamic_cast<PositionComponent *>(
-                        queue.front()->GetComponent(Component::Position))
-                        ->pos;
-    ak_->LoadLaunchSound();
+      // Record reference position of missile loaded
+      missileRefPos = dynamic_cast<PositionComponent *>(
+        queue.front()->GetComponent(Component::Position))
+        ->pos;
+      ak_->LoadLaunchSound();
+    }
   }
 
   if (ref && ak_->HasMouseMoved()) {
@@ -132,9 +136,12 @@ void LauncherSystem::Update() {
 
   }
 
-  if (ref && ak_->IsMouseReleased()) {
+  if (ak_->IsMouseReleased()) {
+    lmbdown = false;
+    if (ref) {
     ref = false;
     releasing = true;
+    }
   }
 
   if (releasing) {
